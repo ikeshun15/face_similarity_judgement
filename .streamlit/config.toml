@@ -1,0 +1,9 @@
+[server]
+port = 50013
+
+[theme]
+base="light"
+primaryColor="#ac5b4c"
+backgroundColor="#fff9f5"
+secondaryBackgroundColor="#e0e0d8"
+textColor="#543e34"

@@ -1,0 +1,21 @@
+version: "3.8"
+
+services:
+  scoring-photos-service:
+    container_name: scoring-photos-container
+
+    image: uttechcenter/scoring_photos:v1.0.0
+
+    ports:
+      - "${SERVER_PORT}:50006"
+
+    command: streamlit run 1_🏠_Home.py
+
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [gpu]
+
+    restart: always
