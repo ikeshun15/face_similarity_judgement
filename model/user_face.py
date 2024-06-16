@@ -51,7 +51,7 @@ class UserFace:
         right_image = right_image.resize((int(right_image.width * new_height / right_image.height), new_height))
 
         draw = ImageDraw.Draw(middle_image)
-        font = ImageFont.truetype('arial.ttf', 50)
+        font = ImageFont.truetype('DejaVuSans.ttf', 50)
         draw.text((55, 65), "{:.3f}".format(scale), fill='black', font=font)
 
         width, height = middle_image.size
