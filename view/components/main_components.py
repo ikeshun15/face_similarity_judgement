@@ -15,7 +15,7 @@ class MainComponents:
     @staticmethod
     def page_header_components():
         st.markdown("# 🥰 Face Similarity Judgement")
-        st.markdown("このアプリは顔写真の類似度を判定します。")
+        st.markdown("このアプリは顔写真の類似度を判定します。 Created by [Takanari Shimbo 🦥](https://github.com/TakanariShimbo) and [Shunichi Ikezu 🍓](https://github.com/ikeshun15)")
     
     @staticmethod
     def image_components():
