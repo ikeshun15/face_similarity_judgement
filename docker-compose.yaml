@@ -7,7 +7,7 @@ services:
     image: uttechcenter/face_similarity_judgement:v1.0.0
 
     ports:
-      - "${SERVER_PORT}:50013"
+      - "${SERVER_PORT}:8501"
 
     command: streamlit run server.py
 

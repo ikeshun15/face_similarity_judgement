@@ -6,4 +6,4 @@ COPY . /work
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-EXPOSE 50013
+EXPOSE 8501

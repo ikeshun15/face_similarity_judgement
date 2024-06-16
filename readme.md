@@ -19,7 +19,7 @@ pip install -r requirements.txt
 
 ```toml:.streamlit/config.toml
 [server]
-port = 50013
+port = 8501
 ```
 
 ### 4. Deploy

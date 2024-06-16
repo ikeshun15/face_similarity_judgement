@@ -1,5 +1,5 @@
 [server]
-port = 50013
+port = 8501
 
 [theme]
 base="light"
