@@ -39,34 +39,26 @@ class UserFace:
     def make_image(self, scale: float = 0.8, new_height: int = 600) -> Image:
         image_scale = 0.5 * scale + 0.5
 
-        # 画像を開く
         left_image = self._original_image1.convert('RGBA')
         middle_image = Image.open('./data/heart.png').convert('RGBA')
         right_image = self._original_image2.convert('RGBA')
 
-        # 左右の画像の高さを指定の高さにリサイズ
         left_image = left_image.resize((int(left_image.width * new_height / left_image.height), new_height))
         middle_image = middle_image.resize((int(middle_image.width * int(new_height/3) / middle_image.height), int(new_height/3)))
         right_image = right_image.resize((int(right_image.width * new_height / right_image.height), new_height))
 
-        # テキストを追加
         draw = ImageDraw.Draw(middle_image)
-        # font_size = int(100 * image_scale)  # フォントサイズをimage_scaleに基づいて調整
-        font = ImageFont.truetype('arial.ttf', 50)  # フォントとサイズを選択
-        draw.text((55, 65), "{:.3f}".format(scale), fill='black', font=font)  # テキストの位置、内容、色、フォントを指定
+        font = ImageFont.truetype('arial.ttf', 50)
+        draw.text((55, 65), "{:.3f}".format(scale), fill='black', font=font)
 
-        # 中央の画像をスケーリング
         width, height = middle_image.size
         middle_image = middle_image.resize((int(width*image_scale*2.5), int(height*image_scale*2.5)))
 
-        # 新しい画像のサイズを計算
         new_width = max(left_image.width, middle_image.width, right_image.width) * 3
         new_height = max(left_image.height, middle_image.height, right_image.height)
 
-        # 新しい画像を作成
         new_image = Image.new('RGBA', (new_width, new_height))
 
-        # 画像を新しい画像に貼り付け
         new_image.paste(left_image, ((new_width // 3 - left_image.width) // 2, (new_height - left_image.height) // 2))
         new_image.paste(middle_image, ((new_width // 3 - middle_image.width) // 2 + new_width // 3, (new_height - middle_image.height) // 2), middle_image)
         new_image.paste(right_image, ((new_width // 3 - right_image.width) // 2 + new_width * 2 // 3, (new_height - right_image.height) // 2))
