@@ -1,21 +1,14 @@
 version: "3.8"
 
 services:
-  scoring-photos-service:
-    container_name: scoring-photos-container
+  face-similarity-judgement-service:
+    container_name: face-similarity-judgement-container
 
-    image: uttechcenter/scoring_photos:v1.0.0
+    image: uttechcenter/face_similarity_judgement:v1.0.0
 
     ports:
-      - "${SERVER_PORT}:50006"
+      - "${SERVER_PORT}:50013"
 
-    command: streamlit run 1_🏠_Home.py
-
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              capabilities: [gpu]
+    command: streamlit run server.py
 
     restart: always

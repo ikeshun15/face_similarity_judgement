@@ -24,7 +24,7 @@ class MainComponents:
             col1, col2 = st.columns(2)
             uploaded_file1 = col1.file_uploader("1枚目の写真", type=["png", "jpg", "jpeg"])
             uploaded_file2 = col2.file_uploader("2枚目の写真", type=["png", "jpg", "jpeg"])
-            submit_button = st.form_submit_button(label='Submit', type="primary")
+            submit_button = st.form_submit_button(label='判定する✨', type="primary")
 
         if submit_button:
             with st.spinner(text="計算中..."):
