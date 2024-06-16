@@ -20,8 +20,11 @@ class UserFace:
         face_boxes1, kpss1 = self._decoder.detect(img=self._image1)
         face_boxes2, kpss2 = self._decoder.detect(img=self._image2)
 
-        self._detected_face1 = Face(bbox=face_boxes1[0][0:4], kps=kpss1[0])
-        self._detected_face2 = Face(bbox=face_boxes2[0][0:4], kps=kpss2[0])
+        try:
+            self._detected_face1 = Face(bbox=face_boxes1[0][0:4], kps=kpss1[0])
+            self._detected_face2 = Face(bbox=face_boxes2[0][0:4], kps=kpss2[0])
+        except:
+            return False
 
         self._encoder.get(img=self._image1, face=self._detected_face1)
         self._encoder.get(img=self._image2, face=self._detected_face2)

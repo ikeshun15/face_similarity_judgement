@@ -1,3 +1,3 @@
-from view import HomeComponents
+from view import MainComponents
 
-HomeComponents.display_components()
+MainComponents.display_components()

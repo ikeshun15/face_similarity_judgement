@@ -1,1 +1,1 @@
-from .home_components import HomeComponents
+from .main_components import MainComponents

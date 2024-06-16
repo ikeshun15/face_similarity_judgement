@@ -1,7 +1,7 @@
 import streamlit as st
-from model import UserFace, download_onnx_model
+from model import UserFace, ModelManager
 
-class HomeComponents:
+class MainComponents:
     @staticmethod
     def init():
         st.set_page_config(
@@ -10,7 +10,7 @@ class HomeComponents:
             layout="wide",
         )
         with st.spinner(text="モデルダウンロード中..."):
-            download_onnx_model()
+            ModelManager.ONNX
 
     @staticmethod
     def page_header_components():
