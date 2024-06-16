@@ -4,7 +4,7 @@ services:
   face-similarity-judgement-service:
     container_name: face-similarity-judgement-container
 
-    image: uttechcenter/face_similarity_judgement:v1.0.0
+    image: uttechcenter/face-similarity-judgement:v1.0.0
 
     ports:
       - "${SERVER_PORT}:8501"

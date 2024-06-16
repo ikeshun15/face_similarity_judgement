@@ -1,29 +1,51 @@
-## About
+## 🥰About
 
-Face Similarity Judgement App
+This is repository of "Face Similarity Judgement App"
 
-## Deploy
+## 🐋Docker
 
-### 1. Create python environment
-```sh
-conda create --name python311_face_similarity_judgement python=3.11
-conda activate python311_face_similarity_judgement
+- docker is required
+
+### Deploy server
+
+```bash
+# Please set the .env file before executing it.
+docker compose up -d
 ```
 
-### 2. Install python library
-```sh
+### Build image
+
+```bash
+# Please change the username and tag correctly.
+docker build -t uttechcenter/face-similarity-judgement:v1.0.0 .
+```
+
+## 🐍Conda
+
+- conda or miniconda is required
+
+### Create venv
+
+```bash
+conda create --name face_similarity_judgement python=3.11
+```
+
+### Activate venv
+
+```bash
+conda activate face_similarity_judgement
+```
+
+### Install libs
+
+```bash
+# Please activate venv before executing it.
 pip install -r requirements.txt
 ```
 
-### 3. Set Port
+### Deploy server
 
-```toml:.streamlit/config.toml
-[server]
-port = 8501
-```
-
-### 4. Deploy
-
-```sh
+```bash
+# Please activate venv before executing it.
 streamlit run server.py
 ```
