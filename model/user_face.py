@@ -2,6 +2,9 @@ from insightface.app.common import Face
 from insightface.model_zoo.model_zoo import get_model
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
 class UserFace:
     def __init__(self, image_path1, image_path2):
@@ -51,7 +54,7 @@ class UserFace:
         right_image = right_image.resize((int(right_image.width * new_height / right_image.height), new_height))
 
         draw = ImageDraw.Draw(middle_image)
-        font = ImageFont.truetype('DejaVuSans.ttf', 50)
+        font = ImageFont.truetype(os.environ['IMAGE_FONT'], 50)
         draw.text((55, 65), "{:.3f}".format(scale), fill='black', font=font)
 
         width, height = middle_image.size

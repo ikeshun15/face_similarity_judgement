@@ -7,3 +7,4 @@ plotly
 matplotlib
 insightface
 onnxruntime
+python-dotenv
