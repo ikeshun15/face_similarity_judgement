@@ -1,4 +1,5 @@
 import streamlit as st
+from model import UserFace, download_onnx_model
 
 class HomeComponents:
     @staticmethod
@@ -8,37 +9,40 @@ class HomeComponents:
             page_icon="🥰",
             layout="wide",
         )
+        with st.spinner(text="モデルダウンロード中..."):
+            download_onnx_model()
 
     @staticmethod
-    def page_header():
+    def page_header_components():
         st.markdown("# 🥰 Face Similarity Judgement")
         st.markdown("このアプリは顔写真の類似度を判定します。")
-
+    
     @staticmethod
-    def upload_images():
+    def image_components():
         form = st.form(key="image_input_form")
-        uploaded_file1 = None
-        uploaded_file2 = None
-        submit_pressed = False
         with form:
             col1, col2 = st.columns(2)
-            uploaded_file1 = col1.file_uploader("一人目の写真", type=["png", "jpg", "jpeg"])
-            uploaded_file2 = col2.file_uploader("二人目の写真", type=["png", "jpg", "jpeg"])
+            uploaded_file1 = col1.file_uploader("1枚目の写真", type=["png", "jpg", "jpeg"])
+            uploaded_file2 = col2.file_uploader("2枚目の写真", type=["png", "jpg", "jpeg"])
             submit_button = st.form_submit_button(label='Submit', type="primary")
 
         if submit_button:
-            submit_pressed = True
-        return uploaded_file1, uploaded_file2, submit_pressed
+            with st.spinner(text="計算中..."):
+                if uploaded_file1 is not None and uploaded_file2 is not None:
+                    face = UserFace(image_path1=uploaded_file1, image_path2=uploaded_file2)
+                    is_detect = face.detect_faces()
+                    
+                    if is_detect:
+                        similarity = face.estimate_cosine_similarity()
+                        combined_image = face.make_image(scale=similarity)
+                        st.image(combined_image, use_column_width=True)
+                    else:
+                        st.error(icon="🙅", body="顔を検出できませんでした")
+                else:
+                    st.warning(icon="🙅", body="二枚の画像をアップロードしてください")
 
-    @staticmethod
-    def display_images(image1, image2):
-        st.image(image1, caption='Uploaded Image 1.', use_column_width=True)
-        st.image(image2, caption='Uploaded Image 2.', use_column_width=True)
-
-    @staticmethod
-    def display_error(message):
-        st.error(icon="🙅", body=message)
-
-    @staticmethod
-    def display_combined_image(image):
-        st.image(image, use_column_width=True)
+    @classmethod
+    def display_components(cls) -> None:
+        cls.init()
+        cls.page_header_components()
+        cls.image_components()

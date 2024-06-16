@@ -1,3 +1,3 @@
-from controller import HomeController
+from view import HomeComponents
 
-HomeController.main()
+HomeComponents.display_components()
