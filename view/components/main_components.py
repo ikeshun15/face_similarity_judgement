@@ -1,5 +1,5 @@
 import streamlit as st
-from model import UserFace, download_model
+from model import UserFace, FaceRecognizer
 
 
 class MainComponents:
@@ -11,7 +11,7 @@ class MainComponents:
             layout="wide",
         )
         with st.spinner(text="モデルダウンロード中..."):
-            download_model()
+            FaceRecognizer.download_model()
 
     @staticmethod
     def page_header_components():
