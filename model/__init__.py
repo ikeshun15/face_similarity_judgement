@@ -1,1 +1,1 @@
-from .manager import ImageManager
+from .user_face import UserFace

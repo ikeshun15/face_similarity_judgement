@@ -1,3 +1,3 @@
-from app import HomeComponents
+from controller import HomeController
 
-HomeComponents.display_components()
+HomeController.main()
