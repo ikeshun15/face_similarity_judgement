@@ -27,15 +27,20 @@ class UserFace:
         assert type(embedding2) == np.ndarray
 
         cosine_similarity = FaceRecognizer.estimate_cosine_similarity(embedding1=embedding1, embedding2=embedding2)
+        percent_similarity = self.convert_cosine_to_percent(cosine_value=cosine_similarity)
+        print(percent_similarity)
+        return percent_similarity
 
-        similarity = (abs(cosine_similarity) ** (1 / 2)) * 100 + 50
-        if cosine_similarity > 0:
-            return min(similarity, 100)
+    @staticmethod
+    def convert_cosine_to_percent(cosine_value: float) -> int:
+        percent_value = (abs(cosine_value) ** (2 / 3)) * 150 + 30
+        if cosine_value > 0:
+            return int(min(percent_value, 100))
         else:
-            return max(-similarity, 0)
+            return int(max(percent_value, 0))
 
-    def make_image(self, similarity: float = 0.8, new_height: int = 600) -> Image:
-        image_scale = 0.5 * similarity / 100
+    def make_image(self, similarity: int = 50, new_height: int = 600) -> Image:
+        image_scale = 0.5 * (similarity + 1) / 100
 
         left_image = self._original_image1.convert("RGBA")
         middle_image = Image.open("./data/heart.png").convert("RGBA")
@@ -47,7 +52,7 @@ class UserFace:
 
         draw = ImageDraw.Draw(middle_image)
         font = ImageFont.truetype(os.environ["FONT_TYPE"], 50)
-        draw.text((55, 65), "{:.1f}%".format(similarity), fill="black", font=font)
+        draw.text((55, 65), f"{similarity}%", fill="black", font=font)
 
         width, height = middle_image.size
         middle_image = middle_image.resize((int(width * image_scale * 2.5), int(height * image_scale * 2.5)))
