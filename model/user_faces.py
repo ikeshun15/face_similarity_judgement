@@ -50,7 +50,7 @@ class UserFaces:
 
         middle_image = Image.open("./data/heart.png").convert("RGBA")
         draw = ImageDraw.Draw(middle_image)
-        font = ImageFont.truetype("arial.ttf", 80)
+        font = ImageFont.truetype(FONT_TYPE, 80)
         draw.text((130, 150), f"{similarity}%", fill="black", font=font)
 
         width, height = middle_image.size
