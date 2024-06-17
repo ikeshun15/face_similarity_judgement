@@ -1,3 +1,4 @@
+import os
 import numpy as np
 
 from insightface.app import FaceAnalysis
@@ -28,6 +29,7 @@ class FaceRecognizer:
 
         try:
             assert type(kpss) == np.ndarray
+            assert len(face_boxes) == 1
             face = Face(bbox=face_boxes[0][0:4], kps=kpss[0])
         except:
             return None
@@ -36,7 +38,8 @@ class FaceRecognizer:
 
     @staticmethod
     def download_model(model_name: str = "buffalo_l"):
-        FaceAnalysis(name=model_name, root=ROOT_DIR_PATH)
+        if not os.path.isdir(s=ROOT_DIR_PATH):
+            FaceAnalysis(name=model_name, root=ROOT_DIR_PATH)
 
     @staticmethod
     def estimate_cosine_similarity(embedding1: np.ndarray, embedding2: np.ndarray) -> float:

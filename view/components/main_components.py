@@ -6,7 +6,7 @@ class MainComponents:
     @staticmethod
     def init():
         st.set_page_config(
-            page_title="Face Similarity Judgement",
+            page_title="私たちって似てる？",
             page_icon="🥰",
             layout="wide",
         )
@@ -15,7 +15,7 @@ class MainComponents:
 
     @staticmethod
     def page_header_components():
-        st.markdown("# 🥰 Face Similarity Judgement")
+        st.markdown("# 🥰私たちって似てる？")
         st.markdown(
             "このアプリは顔写真の類似度を判定します。 Created by [Takanari Shimbo 🦥](https://github.com/TakanariShimbo) and [Shunichi Ikezu 🍓](https://github.com/ikeshun15)"
         )
@@ -35,13 +35,13 @@ class MainComponents:
                     user_face = UserFace(image_path1=uploaded_file1, image_path2=uploaded_file2)
                     try:
                         similarity = user_face.estimate_similarity()
-                        combined_image = user_face.make_image(scale=similarity)
+                        combined_image = user_face.make_image(similarity=similarity)
                         st.image(combined_image, use_column_width=True)
                     except:
-                        st.error(icon="🙅", body="顔を検出できませんでした")
+                        st.error(icon="🙅", body="誰か一人が映っている写真にしてね")
 
                 else:
-                    st.warning(icon="🙅", body="二枚の画像をアップロードしてください")
+                    st.warning(icon="🙅", body="二人分の写真をアップロードしてね")
 
     @classmethod
     def display_components(cls) -> None:

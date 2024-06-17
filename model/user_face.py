@@ -27,10 +27,15 @@ class UserFace:
         assert type(embedding2) == np.ndarray
 
         cosine_similarity = FaceRecognizer.estimate_cosine_similarity(embedding1=embedding1, embedding2=embedding2)
-        return cosine_similarity
 
-    def make_image(self, scale: float = 0.8, new_height: int = 600) -> Image:
-        image_scale = 0.5 * scale + 0.5
+        similarity = (abs(cosine_similarity) ** (1 / 2)) * 100 + 50
+        if cosine_similarity > 0:
+            return min(similarity, 100)
+        else:
+            return max(-similarity, 0)
+
+    def make_image(self, similarity: float = 0.8, new_height: int = 600) -> Image:
+        image_scale = 0.5 * similarity / 100
 
         left_image = self._original_image1.convert("RGBA")
         middle_image = Image.open("./data/heart.png").convert("RGBA")
@@ -42,7 +47,7 @@ class UserFace:
 
         draw = ImageDraw.Draw(middle_image)
         font = ImageFont.truetype(os.environ["IMAGE_FONT"], 50)
-        draw.text((55, 65), "{:.3f}".format(scale), fill="black", font=font)
+        draw.text((55, 65), "{:.1f}%".format(similarity), fill="black", font=font)
 
         width, height = middle_image.size
         middle_image = middle_image.resize((int(width * image_scale * 2.5), int(height * image_scale * 2.5)))
