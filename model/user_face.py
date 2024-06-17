@@ -46,7 +46,7 @@ class UserFace:
         right_image = right_image.resize((int(right_image.width * new_height / right_image.height), new_height))
 
         draw = ImageDraw.Draw(middle_image)
-        font = ImageFont.truetype(os.environ["IMAGE_FONT"], 50)
+        font = ImageFont.truetype(os.environ["FONT_TYPE"], 50)
         draw.text((55, 65), "{:.1f}%".format(similarity), fill="black", font=font)
 
         width, height = middle_image.size
