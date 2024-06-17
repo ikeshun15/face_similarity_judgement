@@ -1,2 +1,2 @@
-from .user_face import UserFace
+from .user_faces import UserFaces
 from .face_recognizer import FaceRecognizer

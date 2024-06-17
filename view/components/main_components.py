@@ -1,5 +1,5 @@
 import streamlit as st
-from model import UserFace, FaceRecognizer
+from model import UserFaces, FaceRecognizer
 
 
 class MainComponents:
@@ -16,9 +16,7 @@ class MainComponents:
     @staticmethod
     def page_header_components():
         st.markdown("# 🥰私たちって似てる？")
-        st.markdown(
-            "このアプリは顔写真の類似度を判定します。 Created by [Takanari Shimbo 🦥](https://github.com/TakanariShimbo) and [Shunichi Ikezu 🍓](https://github.com/ikeshun15)"
-        )
+        st.markdown("Created by [Takanari Shimbo 🦥](https://github.com/TakanariShimbo) and [Shunichi Ikezu 🍓](https://github.com/ikeshun15)")
 
     @staticmethod
     def image_components():
@@ -31,17 +29,18 @@ class MainComponents:
 
         if submit_button:
             with st.spinner(text="計算中..."):
-                if uploaded_file1 is not None and uploaded_file2 is not None:
-                    user_face = UserFace(image_path1=uploaded_file1, image_path2=uploaded_file2)
-                    try:
-                        similarity = user_face.estimate_similarity()
-                        combined_image = user_face.make_image(similarity=similarity)
-                        st.image(combined_image, use_column_width=True)
-                    except:
-                        st.error(icon="🙅", body="誰か一人が映っている写真にしてね")
+                if not uploaded_file1:
+                    st.warning(icon="🙅", body="一人目の写真をアップロードしてね")
+                if not uploaded_file2:
+                    st.warning(icon="🙅", body="二人目の写真をアップロードしてね")
 
-                else:
-                    st.warning(icon="🙅", body="二人分の写真をアップロードしてね")
+                user_faces = UserFaces(image_path1=uploaded_file1, image_path2=uploaded_file2)
+                try:
+                    similarity = user_faces.estimate_similarity()
+                    combined_image = user_faces.make_image(similarity=similarity)
+                    st.image(combined_image, use_column_width=True)
+                except:
+                    st.error(icon="🙅", body="誰か一人が映っている写真にしてね")
 
     @classmethod
     def display_components(cls) -> None:
