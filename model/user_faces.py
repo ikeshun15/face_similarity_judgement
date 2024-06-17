@@ -36,11 +36,9 @@ class UserFaces:
     def make_image(self, similarity: int = 50, new_width: int = 2200, new_height: int = 450) -> Image:
         image_scale = 0.5 * (similarity + 1) / 100
 
-        # 新しい画像サイズに基づいて左右の画像をリサイズ
         left_image = self._original_image1.convert("RGBA")
         right_image = self._original_image2.convert("RGBA")
 
-        # 縦横比を維持しながらリサイズ
         left_image_ratio = left_image.width / left_image.height
         right_image_ratio = right_image.width / right_image.height
 
@@ -50,19 +48,16 @@ class UserFaces:
         left_image = left_image.resize((new_left_width, new_height))
         right_image = right_image.resize((new_right_width, new_height))
 
-        # 中央の画像をリサイズ
         middle_image = Image.open("./data/heart.png").convert("RGBA")
         draw = ImageDraw.Draw(middle_image)
-        font = ImageFont.truetype("arial.ttf", 80)  # FONT_TYPEを適切なフォントパスに置き換えてください
+        font = ImageFont.truetype("arial.ttf", 80)
         draw.text((130, 150), f"{similarity}%", fill="black", font=font)
 
         width, height = middle_image.size
         middle_image = middle_image.resize((int(width * image_scale * 2.5), int(height * image_scale * 2.5)))
 
-        # 新しい画像を作成
         new_image = Image.new("RGBA", (new_width, new_height))
 
-        # 画像を新しい画像に貼り付け
         new_image.paste(left_image, ((new_width // 3 - new_left_width) // 2, (new_height - left_image.height) // 2))
         new_image.paste(middle_image, ((new_width // 3 - middle_image.width) // 2 + new_width // 3, (new_height - middle_image.height) // 2), middle_image)
         new_image.paste(right_image, ((new_width // 3 - new_right_width) // 2 + new_width * 2 // 3, (new_height - right_image.height) // 2))
