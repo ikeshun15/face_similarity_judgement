@@ -32,15 +32,14 @@ class MainComponents:
         if submit_button:
             with st.spinner(text="計算中..."):
                 if uploaded_file1 is not None and uploaded_file2 is not None:
-                    face = UserFace(image_path1=uploaded_file1, image_path2=uploaded_file2)
-                    is_detect = face.detect_faces()
-
-                    if is_detect:
-                        similarity = face.estimate_cosine_similarity()
-                        combined_image = face.make_image(scale=similarity)
+                    user_face = UserFace(image_path1=uploaded_file1, image_path2=uploaded_file2)
+                    try:
+                        similarity = user_face.estimate_similarity()
+                        combined_image = user_face.make_image(scale=similarity)
                         st.image(combined_image, use_column_width=True)
-                    else:
+                    except:
                         st.error(icon="🙅", body="顔を検出できませんでした")
+
                 else:
                     st.warning(icon="🙅", body="二枚の画像をアップロードしてください")
 

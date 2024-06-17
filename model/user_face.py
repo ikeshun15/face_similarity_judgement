@@ -19,22 +19,15 @@ class UserFace:
         self._image1 = np.array(self._original_image1)
         self._image2 = np.array(self._original_image2)
 
-    def detect_faces(self) -> bool:
-        self._face_embedding1 = self._face_recognizer.detect_and_encode_face(image=self._image1)
-        self._face_embedding2 = self._face_recognizer.detect_and_encode_face(image=self._image2)
+    def estimate_similarity(self) -> float:
+        embedding1 = self._face_recognizer.detect_and_encode_face(image=self._image1)
+        embedding2 = self._face_recognizer.detect_and_encode_face(image=self._image2)
 
-        if type(self._face_embedding1) != np.ndarray:
-            return False
-        if type(self._face_embedding2) != np.ndarray:
-            return False
+        assert type(embedding1) == np.ndarray
+        assert type(embedding2) == np.ndarray
 
-        return True
-
-    def estimate_cosine_similarity(self) -> float:
-        a = np.matmul(self._face_embedding1.T, self._face_embedding2)
-        b = np.sum(np.multiply(self._face_embedding1, self._face_embedding1))
-        c = np.sum(np.multiply(self._face_embedding2, self._face_embedding2))
-        return a / (np.sqrt(b) * np.sqrt(c))
+        cosine_similarity = FaceRecognizer.estimate_cosine_similarity(embedding1=embedding1, embedding2=embedding2)
+        return cosine_similarity
 
     def make_image(self, scale: float = 0.8, new_height: int = 600) -> Image:
         image_scale = 0.5 * scale + 0.5

@@ -27,6 +27,7 @@ class FaceRecognizer:
         face_boxes, kpss = self._detector.detect(img=image)
 
         try:
+            assert type(kpss) == np.ndarray
             face = Face(bbox=face_boxes[0][0:4], kps=kpss[0])
         except:
             return None
@@ -36,3 +37,10 @@ class FaceRecognizer:
     @staticmethod
     def download_model(model_name: str = "buffalo_l"):
         FaceAnalysis(name=model_name, root=ROOT_DIR_PATH)
+
+    @staticmethod
+    def estimate_cosine_similarity(embedding1: np.ndarray, embedding2: np.ndarray) -> float:
+        a = np.matmul(embedding1.T, embedding2)
+        b = np.sum(np.multiply(embedding1, embedding1))
+        c = np.sum(np.multiply(embedding2, embedding2))
+        return a / (np.sqrt(b) * np.sqrt(c))
