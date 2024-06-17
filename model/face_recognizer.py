@@ -37,7 +37,7 @@ class FaceRecognizer:
         return self._encoder.get(img=image, face=face)
 
     @staticmethod
-    def download_model(model_name: str = "buffalo_l"):
+    def download_model_if_not_exists(model_name: str = "buffalo_l"):
         if not os.path.isdir(s=ROOT_DIR_PATH):
             FaceAnalysis(name=model_name, root=ROOT_DIR_PATH)
 

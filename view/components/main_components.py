@@ -11,7 +11,7 @@ class MainComponents:
             layout="wide",
         )
         with st.spinner(text="モデルダウンロード中..."):
-            FaceRecognizer.download_model()
+            FaceRecognizer.download_model_if_not_exists()
 
     @staticmethod
     def page_header_components():
