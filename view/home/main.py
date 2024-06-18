@@ -2,14 +2,9 @@ import streamlit as st
 from model import UserFaces, FaceRecognizer
 
 
-class MainComponents:
+class HomeView:
     @staticmethod
     def init():
-        st.set_page_config(
-            page_title="私たちって似てる？",
-            page_icon="🥰",
-            layout="wide",
-        )
         with st.spinner(text="モデルダウンロード中..."):
             FaceRecognizer.download_model_if_not_exists()
 

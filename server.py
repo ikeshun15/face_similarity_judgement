@@ -1,3 +1,6 @@
-from view import MainComponents
+from view import AppConfig, HomeView
 
-MainComponents.display_components()
+
+AppConfig.set_app_config()
+
+HomeView.display_components()
