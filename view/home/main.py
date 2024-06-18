@@ -62,8 +62,7 @@ class HomeView:
 
                 user_faces = UserFaces(uploaded_image1=uploaded_file1, uploaded_image2=uploaded_file2)
                 try:
-                    similarity = user_faces.estimate_similarity()
-                    combined_image = user_faces.make_image(similarity=similarity)
+                    combined_image = user_faces.analyze()
                     st.image(combined_image, use_column_width=True)
                 except:
                     st.error(icon="🙅", body=texts.only_one_person)

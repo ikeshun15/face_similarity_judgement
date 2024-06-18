@@ -24,6 +24,10 @@ class UserFaces:
         self._image1 = np.array(self._original_image1)
         self._image2 = np.array(self._original_image2)
 
+    def analyze(self):
+        similarity = self._estimate_similarity()
+        self._make_image(similarity=similarity)
+
     @staticmethod
     def _open_image(uploaded_image):
         file_extension = uploaded_image.name.split(".")[-1].lower()
@@ -41,7 +45,7 @@ class UserFaces:
         else:
             return Image.open(uploaded_image)
 
-    def estimate_similarity(self) -> int:
+    def _estimate_similarity(self) -> int:
         embedding1 = self._face_recognizer.detect_and_encode_face(image=self._image1)
         embedding2 = self._face_recognizer.detect_and_encode_face(image=self._image2)
 
@@ -52,7 +56,7 @@ class UserFaces:
         percent_similarity = self._convert_cosine_to_percent(cosine_value=cosine_similarity)
         return percent_similarity
 
-    def make_image(self, similarity: int = 50, new_width: int = 2200, new_height: int = 450):
+    def _make_image(self, similarity: int = 50, new_width: int = 2200, new_height: int = 450):
         image_scale = 0.5 * (similarity + 1) / 100
 
         left_image = self._original_image1.convert("RGBA")
