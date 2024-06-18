@@ -1,1 +1,2 @@
-from .components import MainComponents
+from .config import AppConfig
+from .home import HomeView

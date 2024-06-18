@@ -1,8 +1,10 @@
 python-dotenv==1.0.1
 streamlit==1.35.0
+streamlit-lottie==0.0.5
 numpy==1.26.4
 pandas==2.2.2
 Pillow==10.3.0
+pillow_heif==0.16.0
 opencv-python-headless==4.10.0.82
 insightface==0.7.3
 onnxruntime==1.18.0
