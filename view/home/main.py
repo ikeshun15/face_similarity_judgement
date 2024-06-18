@@ -1,6 +1,7 @@
 import streamlit as st
+from streamlit_lottie import st_lottie_spinner
 
-from model import UserFaces, FaceRecognizer
+from model import UserFaces, FaceRecognizer, PROCCESSING_LOTTIE
 from .sstate import TextsSState
 from .texts import Texts
 
@@ -43,14 +44,15 @@ class HomeView:
         texts = TextsSState.get()
 
         with st.form(key="image_input_form"):
-            uploaded_file1 = st.file_uploader(label=texts.photo_of_person1, type=["png", "jpg", "jpeg"], accept_multiple_files=False)
-            uploaded_file2 = st.file_uploader(label=texts.photo_of_person2, type=["png", "jpg", "jpeg"], accept_multiple_files=False)
+            types_accepted = ["png", "jpg", "jpeg", "bmp", "webp", "heic"]
+            uploaded_file1 = st.file_uploader(label=texts.photo_of_person1, type=types_accepted, accept_multiple_files=False, label_visibility="collapsed")
+            uploaded_file2 = st.file_uploader(label=texts.photo_of_person2, type=types_accepted, accept_multiple_files=False, label_visibility="collapsed")
             left, _ = st.columns([1, 3])
             with left:
                 submit_button = st.form_submit_button(label=texts.analyze, type="primary", use_container_width=True)
 
         if submit_button:
-            with st.spinner(text=texts.analyzing):
+            with st_lottie_spinner(animation_source=PROCCESSING_LOTTIE, height=200):
                 if not uploaded_file1:
                     st.warning(icon="🙅", body=texts.please_upload_photo_of_person1)
                     return
@@ -58,7 +60,7 @@ class HomeView:
                     st.warning(icon="🙅", body=texts.please_upload_photo_of_person2)
                     return
 
-                user_faces = UserFaces(image_path1=uploaded_file1, image_path2=uploaded_file2)
+                user_faces = UserFaces(uploaded_image1=uploaded_file1, uploaded_image2=uploaded_file2)
                 try:
                     similarity = user_faces.estimate_similarity()
                     combined_image = user_faces.make_image(similarity=similarity)

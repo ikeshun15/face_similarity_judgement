@@ -3,6 +3,7 @@ import os
 from dotenv import load_dotenv
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
+import pillow_heif
 
 from .face_recognizer import SingletonFaceRecognizer
 
@@ -10,17 +11,35 @@ load_dotenv()
 
 
 FONT_TYPE = os.environ["FONT_TYPE"]
+HEART_IMAGE_PATH = "./data/heart.png"
 
 
 class UserFaces:
-    def __init__(self, image_path1, image_path2):
+    def __init__(self, uploaded_image1, uploaded_image2):
         self._face_recognizer = SingletonFaceRecognizer()
 
-        self._original_image1 = Image.open(image_path1).convert("RGB")
-        self._original_image2 = Image.open(image_path2).convert("RGB")
+        self._original_image1 = self._open_image(uploaded_image1).convert("RGB")
+        self._original_image2 = self._open_image(uploaded_image2).convert("RGB")
 
         self._image1 = np.array(self._original_image1)
         self._image2 = np.array(self._original_image2)
+
+    @staticmethod
+    def _open_image(uploaded_image):
+        file_extension = uploaded_image.name.split(".")[-1].lower()
+
+        if file_extension == "heic":
+            heif_file = pillow_heif.read_heif(uploaded_image)
+            return Image.frombytes(
+                heif_file.mode,
+                heif_file.size,
+                heif_file.data,
+                "raw",
+                heif_file.mode,
+                heif_file.stride,
+            )
+        else:
+            return Image.open(uploaded_image)
 
     def estimate_similarity(self) -> int:
         embedding1 = self._face_recognizer.detect_and_encode_face(image=self._image1)
@@ -33,7 +52,7 @@ class UserFaces:
         percent_similarity = self._convert_cosine_to_percent(cosine_value=cosine_similarity)
         return percent_similarity
 
-    def make_image(self, similarity: int = 50, new_width: int = 2200, new_height: int = 450) -> Image:
+    def make_image(self, similarity: int = 50, new_width: int = 2200, new_height: int = 450):
         image_scale = 0.5 * (similarity + 1) / 100
 
         left_image = self._original_image1.convert("RGBA")
@@ -48,7 +67,7 @@ class UserFaces:
         left_image = left_image.resize((new_left_width, new_height))
         right_image = right_image.resize((new_right_width, new_height))
 
-        middle_image = Image.open("./data/heart.png").convert("RGBA")
+        middle_image = Image.open(HEART_IMAGE_PATH).convert("RGBA")
         draw = ImageDraw.Draw(middle_image)
         font = ImageFont.truetype(FONT_TYPE, 80)
         draw.text((130, 150), f"{similarity}%", fill="black", font=font)
