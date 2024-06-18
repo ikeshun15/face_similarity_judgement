@@ -10,7 +10,7 @@ class HomeView:
 
     @staticmethod
     def page_header_components():
-        st.markdown("# 🥰私たちって似てる？")
+        st.markdown("## 🥰私たちって似てる？")
         st.markdown("Created by [Takanari Shimbo 🦥](https://github.com/TakanariShimbo) and [Shunichi Ikezu 🍓](https://github.com/ikeshun15)")
 
     @staticmethod
