@@ -26,7 +26,7 @@ class UserFaces:
 
     def analyze(self):
         similarity = self._estimate_similarity()
-        self._make_image(similarity=similarity)
+        return self._make_image(similarity=similarity)
 
     @staticmethod
     def _open_image(uploaded_image):
