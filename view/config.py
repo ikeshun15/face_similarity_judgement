@@ -7,5 +7,5 @@ class AppConfig:
         st.set_page_config(
             page_title="Do We Look Alike?",
             page_icon="🥰",
-            layout="wide",
+            layout="centered",
         )
