@@ -1,6 +1,7 @@
 import os
-import numpy as np
+import threading
 
+import numpy as np
 from insightface.app import FaceAnalysis
 from insightface.app.common import Face
 from insightface.model_zoo.model_zoo import get_model, RetinaFace, ArcFaceONNX
@@ -47,3 +48,14 @@ class FaceRecognizer:
         b = np.sum(np.multiply(embedding1, embedding1))
         c = np.sum(np.multiply(embedding2, embedding2))
         return a / (np.sqrt(b) * np.sqrt(c))
+
+
+class SingletonFaceRecognizer:
+    _instance = None
+    _lock = threading.Lock()
+
+    def __new__(cls):
+        with cls._lock:
+            if cls._instance is None:
+                cls._instance = FaceRecognizer()
+        return cls._instance

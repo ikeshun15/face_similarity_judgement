@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 
-from .face_recognizer import FaceRecognizer
+from .face_recognizer import SingletonFaceRecognizer
 
 load_dotenv()
 
@@ -14,7 +14,7 @@ FONT_TYPE = os.environ["FONT_TYPE"]
 
 class UserFaces:
     def __init__(self, image_path1, image_path2):
-        self._face_recognizer = FaceRecognizer()
+        self._face_recognizer = SingletonFaceRecognizer()
 
         self._original_image1 = Image.open(image_path1).convert("RGB")
         self._original_image2 = Image.open(image_path2).convert("RGB")
@@ -29,7 +29,7 @@ class UserFaces:
         assert type(embedding1) == np.ndarray
         assert type(embedding2) == np.ndarray
 
-        cosine_similarity = FaceRecognizer.estimate_cosine_similarity(embedding1=embedding1, embedding2=embedding2)
+        cosine_similarity = self._face_recognizer.estimate_cosine_similarity(embedding1=embedding1, embedding2=embedding2)
         percent_similarity = self._convert_cosine_to_percent(cosine_value=cosine_similarity)
         return percent_similarity
 
@@ -63,7 +63,6 @@ class UserFaces:
         new_image.paste(right_image, ((new_width // 3 - new_right_width) // 2 + new_width * 2 // 3, (new_height - right_image.height) // 2))
 
         return new_image
-
 
     @staticmethod
     def _convert_cosine_to_percent(cosine_value: float) -> int:
