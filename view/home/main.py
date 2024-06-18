@@ -10,7 +10,7 @@ class HomeView:
     @staticmethod
     def init():
         if not TextsSState.is_initialized_already():
-            TextsSState.set(texts=Texts(lang="en"))
+            TextsSState.set(texts=Texts(lang="jp"))
 
         texts = TextsSState.get()
         with st.spinner(text=texts.downloading_model):
@@ -44,9 +44,9 @@ class HomeView:
         texts = TextsSState.get()
 
         with st.form(key="image_input_form"):
-            types_accepted = ["png", "jpg", "jpeg", "bmp", "webp", "heic"]
-            uploaded_file1 = st.file_uploader(label=texts.photo_of_person1, type=types_accepted, accept_multiple_files=False, label_visibility="collapsed")
-            uploaded_file2 = st.file_uploader(label=texts.photo_of_person2, type=types_accepted, accept_multiple_files=False, label_visibility="collapsed")
+            ok_types = ["png", "jpg", "jpeg", "bmp", "webp", "heic"]
+            uploaded_file1 = st.file_uploader(label=texts.photo_of_person1, type=ok_types, accept_multiple_files=False, label_visibility="collapsed")
+            uploaded_file2 = st.file_uploader(label=texts.photo_of_person2, type=ok_types, accept_multiple_files=False, label_visibility="collapsed")
             left, _ = st.columns([1, 3])
             with left:
                 submit_button = st.form_submit_button(label=texts.analyze, type="primary", use_container_width=True)

@@ -13,7 +13,7 @@ ENCODER_PATH = ROOT_DIR_PATH + "models/buffalo_l/w600k_r50.onnx"
 
 
 class FaceRecognizer:
-    def __init__(self):
+    def __init__(self) -> None:
         detector = get_model(DETECTOR_PATH)
         assert type(detector) == RetinaFace
         detector.prepare(ctx_id=0, input_size=(640, 640))
@@ -38,7 +38,7 @@ class FaceRecognizer:
         return self._encoder.get(img=image, face=face)
 
     @staticmethod
-    def download_model_if_not_exists(model_name: str = "buffalo_l"):
+    def download_model_if_not_exists(model_name: str = "buffalo_l") -> None:
         if not os.path.isdir(s=ROOT_DIR_PATH):
             FaceAnalysis(name=model_name, root=ROOT_DIR_PATH)
 
@@ -54,7 +54,7 @@ class SingletonFaceRecognizer:
     _instance = None
     _lock = threading.Lock()
 
-    def __new__(cls):
+    def __new__(cls) -> FaceRecognizer:
         with cls._lock:
             if cls._instance is None:
                 cls._instance = FaceRecognizer()

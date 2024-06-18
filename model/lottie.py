@@ -8,4 +8,5 @@ class JsonHandler:
             return json.load(f)
 
 
-PROCCESSING_LOTTIE = JsonHandler.load(filepath="./data/processing.json")
+PROCCESSING_LOTTIE_PATH = "./data/processing.json"
+PROCCESSING_LOTTIE = JsonHandler.load(filepath=PROCCESSING_LOTTIE_PATH)
