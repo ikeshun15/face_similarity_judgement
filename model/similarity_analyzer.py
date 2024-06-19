@@ -22,9 +22,6 @@ class SimilarityAnalyzer:
         embedding1 = self._face_recognizer.detect_and_encode_face(image_rgb=np_image_rgb_1)
         embedding2 = self._face_recognizer.detect_and_encode_face(image_rgb=np_image_rgb_2)
 
-        assert type(embedding1) == np.ndarray
-        assert type(embedding2) == np.ndarray
-
         cosine_similarity = self._face_recognizer.estimate_cosine_similarity(embedding1=embedding1, embedding2=embedding2)
         percent_similarity = self._convert_cosine_to_percent(cosine_value=cosine_similarity)
 

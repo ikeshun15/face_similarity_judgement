@@ -27,15 +27,12 @@ class FaceRecognizer:
         self._detector = detector
         self._encoder = encoder
 
-    def detect_and_encode_face(self, image_rgb: np.ndarray) -> np.ndarray | None:
+    def detect_and_encode_face(self, image_rgb: np.ndarray) -> np.ndarray:
         face_boxes, kpss = self._detector.detect(img=image_rgb)
 
-        try:
-            assert type(kpss) == np.ndarray
-            assert len(face_boxes) == 1
-            face = Face(bbox=face_boxes[0][0:4], kps=kpss[0])
-        except:
-            return None
+        assert type(kpss) == np.ndarray
+        assert len(face_boxes) == 1
+        face = Face(bbox=face_boxes[0][0:4], kps=kpss[0])
 
         return self._encoder.get(img=image_rgb, face=face)
 
