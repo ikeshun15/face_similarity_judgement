@@ -37,6 +37,8 @@ class HomeView:
     @staticmethod
     def page_footer_components():
         texts = TextsSState.get()
+        style = "<style>p {text-align: center;}</style>"
+        st.markdown(style, unsafe_allow_html=True)
         st.markdown(texts.authers)
 
     @staticmethod
