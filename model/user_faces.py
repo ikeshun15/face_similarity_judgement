@@ -6,7 +6,7 @@ from PIL import Image, ImageDraw, ImageFont
 import pillow_heif
 from streamlit.runtime.uploaded_file_manager import UploadedFile
 
-from .face_recognizer import SingletonFaceRecognizer
+from .face_recognizer import FaceRecognizerFactory
 
 load_dotenv()
 
@@ -17,7 +17,7 @@ HEART_IMAGE_PATH = "./data/heart.png"
 
 class UserFaces:
     def __init__(self, uploaded_image1: UploadedFile, uploaded_image2: UploadedFile) -> None:
-        self._face_recognizer = SingletonFaceRecognizer()
+        self._face_recognizer = FaceRecognizerFactory.create_as_singleton()
 
         self._image1 = self._open_image(uploaded_image1)
         self._image2 = self._open_image(uploaded_image2)

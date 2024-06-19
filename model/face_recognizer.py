@@ -38,11 +38,6 @@ class FaceRecognizer:
         return self._encoder.get(img=image, face=face)
 
     @staticmethod
-    def download_model_if_not_exists(model_name: str = "buffalo_l") -> None:
-        if not os.path.isdir(s=ROOT_DIR_PATH):
-            FaceAnalysis(name=model_name, root=ROOT_DIR_PATH)
-
-    @staticmethod
     def estimate_cosine_similarity(embedding1: np.ndarray, embedding2: np.ndarray) -> float:
         a = np.matmul(embedding1.T, embedding2)
         b = np.sum(np.multiply(embedding1, embedding1))
@@ -50,11 +45,17 @@ class FaceRecognizer:
         return a / (np.sqrt(b) * np.sqrt(c))
 
 
-class SingletonFaceRecognizer:
+class FaceRecognizerFactory:
     _instance = None
     _lock = threading.Lock()
 
-    def __new__(cls) -> FaceRecognizer:
+    @staticmethod
+    def download_model_if_not_exists(model_name: str = "buffalo_l") -> None:
+        if not os.path.isdir(s=ROOT_DIR_PATH):
+            FaceAnalysis(name=model_name, root=ROOT_DIR_PATH)
+
+    @classmethod
+    def create_as_singleton(cls) -> FaceRecognizer:
         with cls._lock:
             if cls._instance is None:
                 cls._instance = FaceRecognizer()

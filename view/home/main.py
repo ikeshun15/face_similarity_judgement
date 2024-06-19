@@ -1,7 +1,7 @@
 import streamlit as st
 from streamlit_lottie import st_lottie_spinner
 
-from model import UserFaces, FaceRecognizer, PROCCESSING_LOTTIE
+from model import UserFaces, FaceRecognizerFactory, PROCCESSING_LOTTIE
 from .sstate import TextsSState
 from .texts import Texts
 
@@ -14,7 +14,7 @@ class HomeView:
 
         texts = TextsSState.get()
         with st.spinner(text=texts.downloading_model):
-            FaceRecognizer.download_model_if_not_exists()
+            FaceRecognizerFactory.download_model_if_not_exists()
 
     @staticmethod
     def change_lang_callback():
