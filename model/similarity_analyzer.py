@@ -45,7 +45,7 @@ class SimilarityAnalyzer:
         return percent_value
 
     @staticmethod
-    def _estimate_trim_bbox(image0: np.ndarray, bbox0: BBox, factor: float = 2.0):
+    def _estimate_trim_bbox(image0: np.ndarray, bbox0: BBox, factor: float = 2.75):
         y_max, x_max = image0.shape[:2]
 
         l_want = int(max(bbox0.x, bbox0.y) * factor)
