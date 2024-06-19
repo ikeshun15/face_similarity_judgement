@@ -1,7 +1,7 @@
 import streamlit as st
 from streamlit_lottie import st_lottie_spinner
 
-from model import UserFaces, FaceRecognizerFactory, PROCCESSING_LOTTIE
+from model import UserFaces, FaceRecognizerFactory, PROCESSING_LOTTIE
 from .sstate import TextsSState
 from .texts import Texts
 
@@ -54,7 +54,7 @@ class HomeView:
                 submit_button = st.form_submit_button(label=texts.analyze, type="primary", use_container_width=True)
 
         if submit_button:
-            with st_lottie_spinner(animation_source=PROCCESSING_LOTTIE, height=200):
+            with st_lottie_spinner(animation_source=PROCESSING_LOTTIE, height=200):
                 if not uploaded_file1:
                     st.warning(icon="🙅", body=texts.please_upload_photo_of_person1)
                     return

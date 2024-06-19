@@ -1,18 +1,10 @@
-import os
-
-from dotenv import load_dotenv
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 import pillow_heif
 from streamlit.runtime.uploaded_file_manager import UploadedFile
 
+from .settting import Setting
 from .face_recognizer import FaceRecognizerFactory
-
-load_dotenv()
-
-
-FONT_TYPE = os.environ["FONT_TYPE"]
-HEART_IMAGE_PATH = "./data/heart.png"
 
 
 class UserFaces:
@@ -77,9 +69,9 @@ class UserFaces:
         left_image = left_image.resize((new_left_width, new_height))
         right_image = right_image.resize((new_right_width, new_height))
 
-        middle_image = Image.open(HEART_IMAGE_PATH).convert("RGBA")
+        middle_image = Image.open(Setting.HEART_IMAGE_PATH).convert("RGBA")
         draw = ImageDraw.Draw(middle_image)
-        font = ImageFont.truetype(FONT_TYPE, 80)
+        font = ImageFont.truetype(Setting.FONT_TYPE, 80)
         draw.text((130, 150), f"{similarity}%", fill="black", font=font)
 
         width, height = middle_image.size

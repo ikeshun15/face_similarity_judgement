@@ -1,5 +1,7 @@
 import json
 
+from .settting import Setting
+
 
 class JsonHandler:
     @staticmethod
@@ -8,5 +10,4 @@ class JsonHandler:
             return json.load(f)
 
 
-PROCCESSING_LOTTIE_PATH = "./data/processing.json"
-PROCCESSING_LOTTIE = JsonHandler.load(filepath=PROCCESSING_LOTTIE_PATH)
+PROCESSING_LOTTIE = JsonHandler.load(filepath=Setting.PROCESSING_LOTTIE_PATH)
