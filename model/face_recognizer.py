@@ -7,6 +7,7 @@ from insightface.app.common import Face
 from insightface.model_zoo.model_zoo import get_model, RetinaFace, ArcFaceONNX
 
 
+MODEL_NAME = "buffalo_l"
 ROOT_DIR_PATH = "./insight_face_models/"
 DETECTOR_PATH = ROOT_DIR_PATH + "models/buffalo_l/det_10g.onnx"
 ENCODER_PATH = ROOT_DIR_PATH + "models/buffalo_l/w600k_r50.onnx"
@@ -46,17 +47,17 @@ class FaceRecognizer:
 
 
 class FaceRecognizerFactory:
-    _instance = None
+    _face_recognizer = None
     _lock = threading.Lock()
 
     @staticmethod
-    def download_model_if_not_exists(model_name: str = "buffalo_l") -> None:
+    def download_model_if_not_exists() -> None:
         if not os.path.isdir(s=ROOT_DIR_PATH):
-            FaceAnalysis(name=model_name, root=ROOT_DIR_PATH)
+            FaceAnalysis(name=MODEL_NAME, root=ROOT_DIR_PATH)
 
     @classmethod
     def create_as_singleton(cls) -> FaceRecognizer:
         with cls._lock:
-            if cls._instance is None:
-                cls._instance = FaceRecognizer()
-        return cls._instance
+            if cls._face_recognizer is None:
+                cls._face_recognizer = FaceRecognizer()
+        return cls._face_recognizer
