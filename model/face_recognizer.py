@@ -9,6 +9,11 @@ from insightface.model_zoo.model_zoo import get_model, RetinaFace, ArcFaceONNX
 from .settting import Setting
 
 
+def download_model_if_not_exists() -> None:
+    if not os.path.isdir(s=Setting.ROOT_DIR_PATH):
+        FaceAnalysis(name=Setting.MODEL_NAME, root=Setting.ROOT_DIR_PATH)
+
+
 class FaceRecognizer:
     def __init__(self) -> None:
         detector = get_model(Setting.DETECTOR_PATH)
@@ -22,8 +27,8 @@ class FaceRecognizer:
         self._detector = detector
         self._encoder = encoder
 
-    def detect_and_encode_face(self, image: np.ndarray) -> np.ndarray | None:
-        face_boxes, kpss = self._detector.detect(img=image)
+    def detect_and_encode_face(self, image_rgb: np.ndarray) -> np.ndarray | None:
+        face_boxes, kpss = self._detector.detect(img=image_rgb)
 
         try:
             assert type(kpss) == np.ndarray
@@ -32,7 +37,7 @@ class FaceRecognizer:
         except:
             return None
 
-        return self._encoder.get(img=image, face=face)
+        return self._encoder.get(img=image_rgb, face=face)
 
     @staticmethod
     def estimate_cosine_similarity(embedding1: np.ndarray, embedding2: np.ndarray) -> float:
@@ -45,11 +50,6 @@ class FaceRecognizer:
 class FaceRecognizerFactory:
     _face_recognizer = None
     _lock = threading.Lock()
-
-    @staticmethod
-    def download_model_if_not_exists() -> None:
-        if not os.path.isdir(s=Setting.ROOT_DIR_PATH):
-            FaceAnalysis(name=Setting.MODEL_NAME, root=Setting.ROOT_DIR_PATH)
 
     @classmethod
     def create_as_singleton(cls) -> FaceRecognizer:

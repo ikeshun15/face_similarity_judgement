@@ -1,7 +1,8 @@
 import streamlit as st
 from streamlit_lottie import st_lottie_spinner
 
-from model import UserFaces, FaceRecognizerFactory, PROCESSING_LOTTIE
+from model import download_model_if_not_exists, PROCESSING_LOTTIE
+from .analyzer import analyze_similarity
 from .sstate import TextsSState
 from .texts import Texts
 
@@ -14,7 +15,7 @@ class HomeView:
 
         texts = TextsSState.get()
         with st.spinner(text=texts.downloading_model):
-            FaceRecognizerFactory.download_model_if_not_exists()
+            download_model_if_not_exists()
 
     @staticmethod
     def change_lang_callback():
@@ -62,9 +63,8 @@ class HomeView:
                     st.warning(icon="🙅", body=texts.please_upload_photo_of_person2)
                     return
 
-                user_faces = UserFaces(uploaded_image1=uploaded_file1, uploaded_image2=uploaded_file2)
                 try:
-                    combined_image = user_faces.analyze()
+                    combined_image = analyze_similarity(uploaded_image1=uploaded_file1, uploaded_image2=uploaded_file2)
                     st.image(combined_image, use_column_width=True)
                 except:
                     st.error(icon="🙅", body=texts.only_one_person)
