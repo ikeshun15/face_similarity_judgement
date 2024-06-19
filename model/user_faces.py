@@ -8,16 +8,8 @@ class UserFaces:
         self._image_rgb_1 = image_rgb_1
         self._image_rgb_2 = image_rgb_2
 
-    @property
-    def image_rgb_1(self) -> Image.Image:
-        return self._image_rgb_1
-
-    @property
-    def image_rgb_2(self) -> Image.Image:
-        return self._image_rgb_2
-
-    def generate_conbined_image(self, percent_similarity: int = 50, new_width: int = 2200, new_height: int = 450) -> Image.Image:
-        image_scale = 0.5 * (percent_similarity + 1) / 100
+    def generate_conbined_image(self, percent_similarity: int = 50, new_width: int = 1500, new_height: int = 500) -> Image.Image:
+        image_scale = 0.4 * (percent_similarity + 1) / 100
 
         left_image = self._image_rgb_1.convert("RGBA")
         right_image = self._image_rgb_2.convert("RGBA")

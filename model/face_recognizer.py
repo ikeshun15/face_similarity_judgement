@@ -27,14 +27,14 @@ class FaceRecognizer:
         self._detector = detector
         self._encoder = encoder
 
-    def detect_and_encode_face(self, image_rgb: np.ndarray) -> np.ndarray:
+    def detect_and_encode_face(self, image_rgb: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
         face_boxes, kpss = self._detector.detect(img=image_rgb)
 
         assert type(kpss) == np.ndarray
         assert len(face_boxes) == 1
         face = Face(bbox=face_boxes[0][0:4], kps=kpss[0])
 
-        return self._encoder.get(img=image_rgb, face=face)
+        return face_boxes[0][0:4], self._encoder.get(img=image_rgb, face=face)
 
     @staticmethod
     def estimate_cosine_similarity(embedding1: np.ndarray, embedding2: np.ndarray) -> float:
