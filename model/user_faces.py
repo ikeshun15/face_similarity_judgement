@@ -8,17 +8,31 @@ class UserFaces:
         self._image_rgba_1 = image_rgb_1.convert("RGBA")
         self._image_rgba_2 = image_rgb_2.convert("RGBA")
 
-    def generate_conbined_image(self, percent_value: int = 50, image_size: tuple[int, int] = (1300, 500), image_ratios: tuple[int, int, int] = (5, 3, 5)) -> Image.Image:
-        conbined_image = Image.new("RGBA", image_size)
+    def generate_conbined_image(
+        self,
+        percent_value: int = 50,
+        image_size: tuple[int, int] = (1300, 500),
+        image_ratios: tuple[int, int, int] = (5, 3, 5),
+        margin: int = 80,
+        background_color: str = "#FDF9DA",
+        text_color: str = "#8B3626",
+    ) -> Image.Image:
+        conbined_image = Image.new("RGBA", image_size, color=background_color)
+        draw = ImageDraw.Draw(conbined_image)
+        font = ImageFont.truetype(Setting.FONT_TYPE, 20)
+        x0 = int(image_size[0] - 240 - margin)
+        y0 = int(image_size[1] - margin / 2.5)
+        draw.text((x0, y0), f"Created with #DoWeLookAlike?", fill=text_color, font=font)
+
         middle_image_factor = percent_value / 200 + 0.5
 
         max_size_l = (int(image_size[0] * image_ratios[0] / sum(image_ratios)), image_size[1])
         max_size_r = (int(image_size[0] * image_ratios[2] / sum(image_ratios)), image_size[1])
         max_size_m = (int(image_size[0] * image_ratios[1] / sum(image_ratios)), image_size[1])
 
-        left_image = self._resize(image=self._image_rgba_1, max_size=max_size_l)
-        right_image = self._resize(image=self._image_rgba_2, max_size=max_size_r)
-        heart_image_rgba = self._get_heart_image(percent_value=percent_value)
+        left_image = self._resize(image=self._image_rgba_1, max_size=max_size_l, margin=margin)
+        right_image = self._resize(image=self._image_rgba_2, max_size=max_size_r, margin=margin)
+        heart_image_rgba = self._get_heart_image(percent_value=percent_value, text_color=background_color)
         middle_image = self._resize(image=heart_image_rgba, max_size=max_size_m)
         middle_image = middle_image.resize((int(middle_image.width * middle_image_factor), int(middle_image.height * middle_image_factor)))
 
@@ -29,8 +43,10 @@ class UserFaces:
         return conbined_image
 
     @staticmethod
-    def _resize(image: Image.Image, max_size: tuple[int, int]) -> Image.Image:
+    def _resize(image: Image.Image, max_size: tuple[int, int], margin: int = 0) -> Image.Image:
         max_width, max_height = max_size
+        max_width -= margin
+        max_height -= margin
 
         image_ratio = image.width / image.height
         ideal_width = int(max_height * image_ratio)
@@ -46,9 +62,9 @@ class UserFaces:
         return resized_image
 
     @staticmethod
-    def _get_heart_image(percent_value: int) -> Image.Image:
+    def _get_heart_image(percent_value: int, text_color: str) -> Image.Image:
         heart_image = Image.open(Setting.HEART_IMAGE_PATH).convert("RGBA")
         draw = ImageDraw.Draw(heart_image)
         font = ImageFont.truetype(Setting.FONT_TYPE, 80)
-        draw.text((130, 150), f"{percent_value}%", fill="black", font=font)
+        draw.text((130, 150), f"{percent_value}%", fill=text_color, font=font)
         return heart_image
