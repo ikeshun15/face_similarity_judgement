@@ -20,7 +20,7 @@ class UserFaces:
         conbined_image = Image.new("RGBA", image_size, color=background_color)
         draw = ImageDraw.Draw(conbined_image)
         font = ImageFont.truetype(Setting.FONT_TYPE, 20)
-        x0 = int(image_size[0] - 240 - margin)
+        x0 = int(image_size[0] - 280 - margin)
         y0 = int(image_size[1] - margin / 2.5)
         draw.text((x0, y0), f"Created with #DoWeLookAlike?", fill=text_color, font=font)
 
