@@ -15,7 +15,7 @@ class SimilarityAnalyzer:
     def analyze(self) -> Image.Image:
         image_rgb_1, image_rgb_2, percent_similarity = self._estimate_trimed_images_and_percent_similarity()
         user_faces = UserFaces(image_rgb_1=image_rgb_1, image_rgb_2=image_rgb_2)
-        conbined_image = user_faces.generate_conbined_image(percent_similarity=percent_similarity)
+        conbined_image = user_faces.generate_conbined_image(percent_value=percent_similarity)
         return conbined_image
 
     def _estimate_trimed_images_and_percent_similarity(self) -> tuple[Image.Image, Image.Image, int]:
@@ -71,7 +71,7 @@ class SimilarityAnalyzer:
         return bbox3
 
     @staticmethod
-    def _trim_and_resize_and_convert_image(image: np.ndarray, bbox: BBox) -> Image.Image:
+    def _trim_and_resize_and_convert_image(image: np.ndarray, bbox: BBox, dsize: tuple[int, int] = (500, 500)) -> Image.Image:
         trimed_image = image[bbox.y0 : bbox.y1, bbox.x0 : bbox.x1]
-        resized_image = cv2.resize(src=trimed_image, dsize=(500, 500))
+        resized_image = cv2.resize(src=trimed_image, dsize=dsize)
         return Image.fromarray(resized_image, "RGB")
