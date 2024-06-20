@@ -2,6 +2,8 @@
 
 This is repository of "Face Similarity Judgement App"
 
+https://face-similarity-judgement.streamlit.app/
+
 ## 🐋Docker
 
 - docker is required
