@@ -10,7 +10,7 @@ class UserFaces:
 
     def generate_conbined_image(self, percent_value: int = 50, image_size: tuple[int, int] = (1300, 500), image_ratios: tuple[int, int, int] = (5, 3, 5)) -> Image.Image:
         conbined_image = Image.new("RGBA", image_size)
-        middle_image_factor = max(percent_value, 1) / 100
+        middle_image_factor = percent_value / 200 + 0.5
 
         max_size_l = (int(image_size[0] * image_ratios[0] / sum(image_ratios)), image_size[1])
         max_size_r = (int(image_size[0] * image_ratios[2] / sum(image_ratios)), image_size[1])
