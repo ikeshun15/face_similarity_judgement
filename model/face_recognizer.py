@@ -42,21 +42,16 @@ class FaceRecognizer:
             embeddings.append(embedding)
         return embeddings
 
-    def detect_and_encode_face(self, image_rgb: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
-        face_boxes, kpss = self._detector.detect(img=image_rgb)
-
-        assert type(kpss) == np.ndarray
-        assert len(face_boxes) == 1
-        face = Face(bbox=face_boxes[0][0:4], kps=kpss[0])
-
-        return face_boxes[0][0:4], self._encoder.get(img=image_rgb, face=face)
-
     @staticmethod
     def estimate_cosine_similarity(embedding1: np.ndarray, embedding2: np.ndarray) -> float:
         a = np.matmul(embedding1.T, embedding2)
         b = np.sum(np.multiply(embedding1, embedding1))
         c = np.sum(np.multiply(embedding2, embedding2))
         return a / (np.sqrt(b) * np.sqrt(c))
+
+    def encode_faces_and_estimate_cosine_similarity(self, image_rgb: np.ndarray, face1: tuple[np.ndarray, np.ndarray], face2: tuple[np.ndarray, np.ndarray]) -> float:
+        embedding1, embedding2 = self.encode_faces(image_rgb=image_rgb, faces=[face1, face2])
+        return self.estimate_cosine_similarity(embedding1=embedding1, embedding2=embedding2)
 
 
 class FaceRecognizerFactory:
