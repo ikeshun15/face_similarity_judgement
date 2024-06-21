@@ -1,5 +1,4 @@
 import os
-import threading
 
 import numpy as np
 from insightface.app import FaceAnalysis
@@ -56,11 +55,9 @@ class FaceRecognizer:
 
 class FaceRecognizerFactory:
     _face_recognizer = None
-    _lock = threading.Lock()
 
     @classmethod
     def create_as_singleton(cls) -> FaceRecognizer:
-        with cls._lock:
-            if cls._face_recognizer is None:
-                cls._face_recognizer = FaceRecognizer()
+        if cls._face_recognizer is None:
+            cls._face_recognizer = FaceRecognizer()
         return cls._face_recognizer
