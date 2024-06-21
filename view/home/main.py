@@ -17,7 +17,7 @@ class HomeView:
             download_model_if_not_exists()
 
         if not TextsSState.is_initialized_already():
-            TextsSState.set(texts=Texts(lang="jp"))
+            TextsSState.set(texts=Texts(lang="en"))
 
         if not NSelected1SState.is_initialized_already():
             NSelected1SState.set(n_selected=0)
@@ -66,7 +66,7 @@ class HomeView:
                 detected_faces = DetectedFaces.detect(image_rgb=image_rgb)
 
             if detected_faces.n_faces == 0:
-                st.error(icon="🙅", body=texts.only_one_person)
+                st.error(icon="🙅", body=texts.more_than_one_person)
                 return False
 
             DetectedFaces1SState.set(detected_faces=detected_faces)
@@ -88,13 +88,13 @@ class HomeView:
 
         left, _, center, _, right = st.columns([1, 0.5, 1, 0.5, 1])
         with left:
-            is_return = st.button(label="Return", use_container_width=True)
+            is_back = st.button(label=texts.back, use_container_width=True)
         with center:
-            is_other = st.button(label="Other", use_container_width=True)
+            is_other = st.button(label=texts.other, use_container_width=True)
         with right:
-            is_next = st.button(label="Next", use_container_width=True)
+            is_next = st.button(label=texts.next, use_container_width=True)
 
-        if is_return:
+        if is_back:
             StatesSState.set(state=States.SET_DETECTED_FACES_1)
             return True
         elif is_other:
@@ -118,7 +118,7 @@ class HomeView:
 
         left, _ = st.columns([1, 3])
         with left:
-            is_return = st.button(label="Return", use_container_width=True)
+            is_back = st.button(label=texts.back, use_container_width=True)
 
         if uploaded_file is not None:
             with st_lottie_spinner(animation_source=PROCESSING_LOTTIE, height=200):
@@ -126,14 +126,14 @@ class HomeView:
                 detected_faces = DetectedFaces.detect(image_rgb=image_rgb)
 
             if detected_faces.n_faces == 0:
-                st.error(icon="🙅", body=texts.only_one_person)
+                st.error(icon="🙅", body=texts.more_than_one_person)
                 return False
 
             DetectedFaces2SState.set(detected_faces=detected_faces)
             StatesSState.set(state=States.SELECT_N_FACE_2)
             return True
 
-        if is_return:
+        if is_back:
             StatesSState.set(state=States.SELECT_N_FACE_1)
             return True
         return False
@@ -151,13 +151,13 @@ class HomeView:
 
         left, _, center, _, right = st.columns([1, 0.5, 1, 0.5, 1])
         with left:
-            is_return = st.button(label="Return", use_container_width=True)
+            is_back = st.button(label=texts.back, use_container_width=True)
         with center:
-            is_other = st.button(label="Other", use_container_width=True)
+            is_other = st.button(label=texts.other, use_container_width=True)
         with right:
-            is_next = st.button(label="Next", use_container_width=True)
+            is_next = st.button(label=texts.next, use_container_width=True)
 
-        if is_return:
+        if is_back:
             StatesSState.set(state=States.SET_DETECTED_FACES_2)
             return True
         elif is_other:
@@ -193,7 +193,7 @@ class HomeView:
 
         _, center, _ = st.columns([1.5, 1, 1.5])
         with center:
-            is_retry = st.button(label="Retry", use_container_width=True)
+            is_retry = st.button(label=texts.retry, use_container_width=True)
 
         if is_retry:
             ConbindedImageSState.clear()

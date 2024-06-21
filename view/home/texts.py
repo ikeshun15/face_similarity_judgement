@@ -42,43 +42,11 @@ class Texts:
         raise Exception("lang at Texts should be 'ja' or 'en'!")
 
     @property
-    def please_upload_photo_of_person1(self) -> str:
+    def more_than_one_person(self) -> str:
         if self.is_jp:
-            return "一人目の写真をアップロードしてね"
+            return "一人以上映っている写真にしてね"
         elif self.is_en:
-            return "Please upload 'Photo of Person 1'"
-        raise Exception("lang at Texts should be 'ja' or 'en'!")
-
-    @property
-    def please_upload_photo_of_person2(self) -> str:
-        if self.is_jp:
-            return "二人目の写真をアップロードしてね"
-        elif self.is_en:
-            return "Please upload 'Photo of Person 2'"
-        raise Exception("lang at Texts should be 'ja' or 'en'!")
-
-    @property
-    def analyze(self) -> str:
-        if self.is_jp:
-            return "解析する✨"
-        elif self.is_en:
-            return "Analyze✨"
-        raise Exception("lang at Texts should be 'ja' or 'en'!")
-
-    @property
-    def analyzing(self) -> str:
-        if self.is_jp:
-            return "解析中..."
-        elif self.is_en:
-            return "Analyzing..."
-        raise Exception("lang at Texts should be 'ja' or 'en'!")
-
-    @property
-    def only_one_person(self) -> str:
-        if self.is_jp:
-            return "誰か一人が映っている写真にしてね"
-        elif self.is_en:
-            return "Please make sure the photo contains only one person"
+            return "Please make sure the photo includes more than one person."
         raise Exception("lang at Texts should be 'ja' or 'en'!")
 
     @property
@@ -87,4 +55,36 @@ class Texts:
             return "🗾言語切替"
         elif self.is_en:
             return "🗽Language"
+        raise Exception("lang at Texts should be 'ja' or 'en'!")
+
+    @property
+    def back(self) -> str:
+        if self.is_jp:
+            return "戻る⏪"
+        elif self.is_en:
+            return "Back⏪"
+        raise Exception("lang at Texts should be 'ja' or 'en'!")
+
+    @property
+    def other(self) -> str:
+        if self.is_jp:
+            return "他の人🚶‍➡️"
+        elif self.is_en:
+            return "Other🚶‍➡️"
+        raise Exception("lang at Texts should be 'ja' or 'en'!")
+
+    @property
+    def next(self) -> str:
+        if self.is_jp:
+            return "進む⏭️"
+        elif self.is_en:
+            return "Next⏭️"
+        raise Exception("lang at Texts should be 'ja' or 'en'!")
+
+    @property
+    def retry(self) -> str:
+        if self.is_jp:
+            return "もう一回🙋"
+        elif self.is_en:
+            return "Retry🙋"
         raise Exception("lang at Texts should be 'ja' or 'en'!")
