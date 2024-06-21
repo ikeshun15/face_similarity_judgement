@@ -26,14 +26,6 @@ class Texts:
         return "Created by [Takanari Shimbo 🦥](https://github.com/TakanariShimbo), [Shunichi Ikezu 🍓](https://github.com/ikeshun15)"
 
     @property
-    def downloading_model(self) -> str:
-        if self.is_jp:
-            return "モデルダウンロード中..."
-        elif self.is_en:
-            return "Downloading Model..."
-        raise Exception("lang at Texts should be 'ja' or 'en'!")
-
-    @property
     def photo_of_person1(self) -> str:
         if self.is_jp:
             return "一人目の写真"

@@ -1,5 +1,4 @@
 import os
-import threading
 
 import numpy as np
 from insightface.app import FaceAnalysis
@@ -27,14 +26,20 @@ class FaceRecognizer:
         self._detector = detector
         self._encoder = encoder
 
-    def detect_and_encode_face(self, image_rgb: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
-        face_boxes, kpss = self._detector.detect(img=image_rgb)
+    def detect_faces(self, image_rgb: np.ndarray) -> list[tuple[np.ndarray, np.ndarray]]:
+        bboxes, kpses = self._detector.detect(img=image_rgb)
+        assert type(kpses) == np.ndarray
+        assert len(bboxes) == len(kpses)
+        return [(bbox[0:4], kps) for bbox, kps in zip(bboxes, kpses)]
 
-        assert type(kpss) == np.ndarray
-        assert len(face_boxes) == 1
-        face = Face(bbox=face_boxes[0][0:4], kps=kpss[0])
-
-        return face_boxes[0][0:4], self._encoder.get(img=image_rgb, face=face)
+    def encode_faces(self, image_rgb: np.ndarray, faces: list[tuple[np.ndarray, np.ndarray]]) -> list[np.ndarray]:
+        embeddings: list[np.ndarray] = []
+        for bbox, kps in faces:
+            face = Face(bbox=bbox, kps=kps)
+            embedding = self._encoder.get(img=image_rgb, face=face)
+            assert type(embedding) == np.ndarray
+            embeddings.append(embedding)
+        return embeddings
 
     @staticmethod
     def estimate_cosine_similarity(embedding1: np.ndarray, embedding2: np.ndarray) -> float:
@@ -43,14 +48,24 @@ class FaceRecognizer:
         c = np.sum(np.multiply(embedding2, embedding2))
         return a / (np.sqrt(b) * np.sqrt(c))
 
+    def encode_faces_and_estimate_cosine_similarity(
+        self,
+        image_rgb1: np.ndarray,
+        face1: tuple[np.ndarray, np.ndarray],
+        image_rgb2: np.ndarray,
+        face2: tuple[np.ndarray, np.ndarray],
+    ) -> float:
+        (embedding1,) = self.encode_faces(image_rgb=image_rgb1, faces=[face1])
+        (embedding2,) = self.encode_faces(image_rgb=image_rgb2, faces=[face2])
+        cosine_similarity = self.estimate_cosine_similarity(embedding1=embedding1, embedding2=embedding2)
+        return cosine_similarity
+
 
 class FaceRecognizerFactory:
     _face_recognizer = None
-    _lock = threading.Lock()
 
     @classmethod
     def create_as_singleton(cls) -> FaceRecognizer:
-        with cls._lock:
-            if cls._face_recognizer is None:
-                cls._face_recognizer = FaceRecognizer()
+        if cls._face_recognizer is None:
+            cls._face_recognizer = FaceRecognizer()
         return cls._face_recognizer
