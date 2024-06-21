@@ -16,9 +16,9 @@ class Texts:
     @property
     def title(self) -> str:
         if self.is_jp:
-            return "🥰私たちって似てる？"
+            return "🥰 私たちって似てる？"
         elif self.is_en:
-            return "🥰Do We Look Alike?"
+            return "🥰 Do We Look Alike?"
         raise Exception("lang at Texts should be 'ja' or 'en'!")
 
     @property
@@ -87,4 +87,52 @@ class Texts:
             return "もう一回🙋"
         elif self.is_en:
             return "Retry🙋"
+        raise Exception("lang at Texts should be 'ja' or 'en'!")
+
+    @property
+    def image1_uploader(self) -> str:
+        if self.is_jp:
+            return "一人目の写真をアップロードしてね"
+        elif self.is_en:
+            return "Please upload a photo of the first person."
+        raise Exception("lang at Texts should be 'ja' or 'en'!")
+
+    @property
+    def image1_selector(self) -> str:
+        if self.is_jp:
+            return "一人目の顔写真を選んでね"
+        elif self.is_en:
+            return "Please select a photo of the first person's face."
+        raise Exception("lang at Texts should be 'ja' or 'en'!")
+
+    @property
+    def image2_uploader(self) -> str:
+        if self.is_jp:
+            return "二人目の写真をアップロードしてね"
+        elif self.is_en:
+            return "Please upload a photo of the second person."
+        raise Exception("lang at Texts should be 'ja' or 'en'!")
+
+    @property
+    def image2_selector(self) -> str:
+        if self.is_jp:
+            return "二人目の顔写真を選んでね"
+        elif self.is_en:
+            return "Please select a photo of the second person's face."
+        raise Exception("lang at Texts should be 'ja' or 'en'!")
+
+    @property
+    def result(self) -> str:
+        if self.is_jp:
+            return "類似度は..."
+        elif self.is_en:
+            return "Similarity is ..."
+        raise Exception("lang at Texts should be 'ja' or 'en'!")
+
+    @property
+    def loading(self) -> str:
+        if self.is_jp:
+            return "読み込み中..."
+        elif self.is_en:
+            return "loading..."
         raise Exception("lang at Texts should be 'ja' or 'en'!")

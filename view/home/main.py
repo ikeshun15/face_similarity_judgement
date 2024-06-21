@@ -56,12 +56,13 @@ class HomeView:
     @classmethod
     def set_detected_faces_1_components(cls) -> bool:
         texts = TextsSState.get()
+        st.markdown(body=f"###### {texts.image1_uploader}")
 
         ok_types = ["png", "jpg", "jpeg", "bmp", "webp", "heic"]
         uploaded_file = st.file_uploader(label=texts.photo_of_person1, type=ok_types, accept_multiple_files=False, label_visibility="collapsed")
 
         if uploaded_file is not None:
-            with st_lottie_spinner(animation_source=PROCESSING_LOTTIE, height=200):
+            with st.spinner(text=texts.loading):
                 image_rgb = cls._open_image_as_rgb(uploaded_image=uploaded_file)
                 detected_faces = DetectedFaces.detect(image_rgb=image_rgb)
 
@@ -70,7 +71,10 @@ class HomeView:
                 return False
 
             DetectedFaces1SState.set(detected_faces=detected_faces)
-            StatesSState.set(state=States.SELECT_N_FACE_1)
+            if detected_faces.n_faces == 1:
+                StatesSState.set(state=States.SET_DETECTED_FACES_2)
+            else:
+                StatesSState.set(state=States.SELECT_N_FACE_1)
             return True
 
         return False
@@ -78,6 +82,7 @@ class HomeView:
     @classmethod
     def select_n_face_1_components(cls) -> bool:
         texts = TextsSState.get()
+        st.markdown(body=f"###### {texts.image1_selector}")
 
         n_selected_1 = NSelected1SState.get()
         detected_faces = DetectedFaces1SState.get()
@@ -90,7 +95,7 @@ class HomeView:
         with left:
             is_back = st.button(label=texts.back, use_container_width=True)
         with center:
-            is_other = st.button(label=texts.other, use_container_width=True, disabled=True if detected_faces.n_faces == 1 else False)
+            is_other = st.button(label=texts.other, use_container_width=True)
         with right:
             is_next = st.button(label=texts.next, use_container_width=True)
 
@@ -112,6 +117,7 @@ class HomeView:
     @classmethod
     def set_detected_faces_2_components(cls) -> bool:
         texts = TextsSState.get()
+        st.markdown(body=f"###### {texts.image1_uploader}")
 
         ok_types = ["png", "jpg", "jpeg", "bmp", "webp", "heic"]
         uploaded_file = st.file_uploader(label=texts.photo_of_person2, type=ok_types, accept_multiple_files=False, label_visibility="collapsed")
@@ -121,7 +127,7 @@ class HomeView:
             is_back = st.button(label=texts.back, use_container_width=True)
 
         if uploaded_file is not None:
-            with st_lottie_spinner(animation_source=PROCESSING_LOTTIE, height=200):
+            with st.spinner(text=texts.loading):
                 image_rgb = cls._open_image_as_rgb(uploaded_image=uploaded_file)
                 detected_faces = DetectedFaces.detect(image_rgb=image_rgb)
 
@@ -130,7 +136,10 @@ class HomeView:
                 return False
 
             DetectedFaces2SState.set(detected_faces=detected_faces)
-            StatesSState.set(state=States.SELECT_N_FACE_2)
+            if detected_faces.n_faces == 1:
+                StatesSState.set(state=States.SHOW_RESULT)
+            else:
+                StatesSState.set(state=States.SELECT_N_FACE_2)
             return True
 
         if is_back:
@@ -141,6 +150,7 @@ class HomeView:
     @classmethod
     def select_n_face_2_components(cls) -> bool:
         texts = TextsSState.get()
+        st.markdown(body=f"###### {texts.image2_selector}")
 
         n_selected_2 = NSelected2SState.get()
         detected_faces = DetectedFaces2SState.get()
@@ -153,7 +163,7 @@ class HomeView:
         with left:
             is_back = st.button(label=texts.back, use_container_width=True)
         with center:
-            is_other = st.button(label=texts.other, use_container_width=True, disabled=True if detected_faces.n_faces == 1 else False)
+            is_other = st.button(label=texts.other, use_container_width=True)
         with right:
             is_next = st.button(label=texts.next, use_container_width=True)
 
@@ -175,6 +185,7 @@ class HomeView:
     @classmethod
     def show_result_components(cls) -> bool:
         texts = TextsSState.get()
+        st.markdown(body=f"###### {texts.result}")
 
         if not ConbindedImageSState.is_set_already():
             detected_faces1 = DetectedFaces1SState.get()
