@@ -27,6 +27,21 @@ class FaceRecognizer:
         self._detector = detector
         self._encoder = encoder
 
+    def detect_faces(self, image_rgb: np.ndarray) -> list[tuple[np.ndarray, np.ndarray]]:
+        bboxes, kpses = self._detector.detect(img=image_rgb)
+        assert type(kpses) == np.ndarray
+        assert len(bboxes) == len(kpses)
+        return [(bbox[0:4], kps) for bbox, kps in zip(bboxes, kpses)]
+
+    def encode_faces(self, image_rgb: np.ndarray, faces: list[tuple[np.ndarray, np.ndarray]]) -> list[np.ndarray]:
+        embeddings: list[np.ndarray] = []
+        for bbox, kps in faces:
+            face = Face(bbox=bbox, kps=kps)
+            embedding = self._encoder.get(img=image_rgb, face=face)
+            assert type(embedding) == np.ndarray
+            embeddings.append(embedding)
+        return embeddings
+
     def detect_and_encode_face(self, image_rgb: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
         face_boxes, kpss = self._detector.detect(img=image_rgb)
 
