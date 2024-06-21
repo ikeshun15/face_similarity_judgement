@@ -90,7 +90,7 @@ class HomeView:
         with left:
             is_back = st.button(label=texts.back, use_container_width=True)
         with center:
-            is_other = st.button(label=texts.other, use_container_width=True)
+            is_other = st.button(label=texts.other, use_container_width=True, disabled=True if detected_faces.n_faces == 1 else False)
         with right:
             is_next = st.button(label=texts.next, use_container_width=True)
 
@@ -153,7 +153,7 @@ class HomeView:
         with left:
             is_back = st.button(label=texts.back, use_container_width=True)
         with center:
-            is_other = st.button(label=texts.other, use_container_width=True)
+            is_other = st.button(label=texts.other, use_container_width=True, disabled=True if detected_faces.n_faces == 1 else False)
         with right:
             is_next = st.button(label=texts.next, use_container_width=True)
 
@@ -190,6 +190,7 @@ class HomeView:
             ConbindedImageSState.set(conbinded_image=conbined_image)
 
         st.image(ConbindedImageSState.get().image, use_column_width=True)
+        st.balloons()
 
         _, center, _ = st.columns([1.5, 1, 1.5])
         with center:
