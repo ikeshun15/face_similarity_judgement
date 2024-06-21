@@ -50,7 +50,8 @@ class FaceRecognizer:
 
     def encode_faces_and_estimate_cosine_similarity(self, image_rgb: np.ndarray, face1: tuple[np.ndarray, np.ndarray], face2: tuple[np.ndarray, np.ndarray]) -> float:
         embedding1, embedding2 = self.encode_faces(image_rgb=image_rgb, faces=[face1, face2])
-        return self.estimate_cosine_similarity(embedding1=embedding1, embedding2=embedding2)
+        cosine_similarity = self.estimate_cosine_similarity(embedding1=embedding1, embedding2=embedding2)
+        return cosine_similarity
 
 
 class FaceRecognizerFactory:
