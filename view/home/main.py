@@ -31,6 +31,7 @@ class HomeView:
     @staticmethod
     def change_lang_callback():
         texts = TextsSState.get()
+
         if texts.is_en:
             TextsSState.set(texts=Texts(lang="jp"))
         elif texts.is_jp:
@@ -39,6 +40,7 @@ class HomeView:
     @classmethod
     def page_header_components(cls):
         texts = TextsSState.get()
+
         style = "<style>h3 {text-align: center;}</style>"
         st.markdown(style, unsafe_allow_html=True)
         st.markdown(f"### {texts.title}")
@@ -56,7 +58,8 @@ class HomeView:
     @classmethod
     def set_detected_faces_1_components(cls) -> bool:
         texts = TextsSState.get()
-        st.markdown(body=f"###### {texts.image1_uploader}")
+
+        st.markdown(body=f"###### {texts.uploade_image1}")
 
         ok_types = ["png", "jpg", "jpeg", "bmp", "webp", "heic"]
         uploaded_file = st.file_uploader(label=texts.photo_of_person1, type=ok_types, accept_multiple_files=False, label_visibility="collapsed")
@@ -64,14 +67,14 @@ class HomeView:
         if uploaded_file is not None:
             with st.spinner(text=texts.loading):
                 image_rgb = cls._open_image_as_rgb(uploaded_image=uploaded_file)
-                detected_faces = DetectedFaces.detect(image_rgb=image_rgb)
+                detected_faces1 = DetectedFaces.detect(image_rgb=image_rgb)
 
-            if detected_faces.n_faces == 0:
-                st.error(icon="🙅", body=texts.more_than_one_person)
+            if detected_faces1.n_faces == 0:
+                st.warning(body=texts.warning_no_person)
                 return False
 
-            DetectedFaces1SState.set(detected_faces=detected_faces)
-            if detected_faces.n_faces == 1:
+            DetectedFaces1SState.set(detected_faces=detected_faces1)
+            if detected_faces1.n_faces == 1:
                 StatesSState.set(state=States.SET_DETECTED_FACES_2)
             else:
                 StatesSState.set(state=States.SELECT_N_FACE_1)
@@ -82,11 +85,12 @@ class HomeView:
     @classmethod
     def select_n_face_1_components(cls) -> bool:
         texts = TextsSState.get()
-        st.markdown(body=f"###### {texts.image1_selector}")
+
+        st.markdown(body=f"###### {texts.select_image1}")
 
         n_selected_1 = NSelected1SState.get()
-        detected_faces = DetectedFaces1SState.get()
-        face_image = detected_faces.get_face_image(n=n_selected_1, trim_factor=1.5, dsize=(500, 500))
+        detected_faces1 = DetectedFaces1SState.get()
+        face_image = detected_faces1.get_face_image(n=n_selected_1, trim_factor=1.5, dsize=(500, 500))
         _, center, _ = st.columns(3)
         with center:
             st.image(image=face_image)
@@ -95,7 +99,7 @@ class HomeView:
         with left:
             is_back = st.button(label=texts.back, use_container_width=True)
         with center:
-            is_other = st.button(label=texts.other, use_container_width=True)
+            is_other = st.button(label=texts.others, use_container_width=True, disabled=True if detected_faces1.n_faces == 1 else False)
         with right:
             is_next = st.button(label=texts.next, use_container_width=True)
 
@@ -103,7 +107,7 @@ class HomeView:
             StatesSState.set(state=States.SET_DETECTED_FACES_1)
             return True
         elif is_other:
-            if NSelected1SState.get() < detected_faces.n_faces - 1:
+            if NSelected1SState.get() < detected_faces1.n_faces - 1:
                 NSelected1SState.count_up()
             else:
                 NSelected1SState.reset()
@@ -117,26 +121,30 @@ class HomeView:
     @classmethod
     def set_detected_faces_2_components(cls) -> bool:
         texts = TextsSState.get()
-        st.markdown(body=f"###### {texts.image2_uploader}")
+        detected_faces1 = DetectedFaces1SState.get()
+
+        st.markdown(body=f"###### {texts.uploade_image2}")
 
         ok_types = ["png", "jpg", "jpeg", "bmp", "webp", "heic"]
         uploaded_file = st.file_uploader(label=texts.photo_of_person2, type=ok_types, accept_multiple_files=False, label_visibility="collapsed")
 
-        left, _ = st.columns([1, 3])
+        left, _, right = st.columns([1, 2, 1])
         with left:
             is_back = st.button(label=texts.back, use_container_width=True)
+        with right:
+            is_skip = st.button(label=texts.skip, use_container_width=True, disabled=True if detected_faces1.n_faces == 1 else False)
 
         if uploaded_file is not None:
             with st.spinner(text=texts.loading):
                 image_rgb = cls._open_image_as_rgb(uploaded_image=uploaded_file)
-                detected_faces = DetectedFaces.detect(image_rgb=image_rgb)
+                detected_faces2 = DetectedFaces.detect(image_rgb=image_rgb)
 
-            if detected_faces.n_faces == 0:
-                st.error(icon="🙅", body=texts.more_than_one_person)
+            if detected_faces2.n_faces == 0:
+                st.warning(body=texts.warning_no_person)
                 return False
 
-            DetectedFaces2SState.set(detected_faces=detected_faces)
-            if detected_faces.n_faces == 1:
+            DetectedFaces2SState.set(detected_faces=detected_faces2)
+            if detected_faces2.n_faces == 1:
                 StatesSState.set(state=States.SHOW_RESULT)
             else:
                 StatesSState.set(state=States.SELECT_N_FACE_2)
@@ -145,33 +153,44 @@ class HomeView:
         if is_back:
             StatesSState.set(state=States.SELECT_N_FACE_1)
             return True
+        if is_skip:
+            DetectedFaces2SState.set(detected_faces=detected_faces1)
+            StatesSState.set(state=States.SELECT_N_FACE_2)
+            return True
         return False
 
     @classmethod
     def select_n_face_2_components(cls) -> bool:
         texts = TextsSState.get()
-        st.markdown(body=f"###### {texts.image2_selector}")
+        n_selected_1 = NSelected1SState.get()
+        detected_faces1 = DetectedFaces1SState.get()
+
+        st.markdown(body=f"###### {texts.select_image2}")
 
         n_selected_2 = NSelected2SState.get()
-        detected_faces = DetectedFaces2SState.get()
-        face_image = detected_faces.get_face_image(n=n_selected_2, trim_factor=1.5, dsize=(500, 500))
+        detected_faces2 = DetectedFaces2SState.get()
+        face_image = detected_faces2.get_face_image(n=n_selected_2, trim_factor=1.5, dsize=(500, 500))
         _, center, _ = st.columns(3)
         with center:
             st.image(image=face_image)
 
+        is_selected_same_face = detected_faces1 == detected_faces2 and n_selected_1 == n_selected_2
         left, _, center, _, right = st.columns([1, 0.5, 1, 0.5, 1])
         with left:
             is_back = st.button(label=texts.back, use_container_width=True)
         with center:
-            is_other = st.button(label=texts.other, use_container_width=True)
+            is_other = st.button(label=texts.others, use_container_width=True, disabled=True if detected_faces2.n_faces == 1 else False)
         with right:
-            is_next = st.button(label=texts.next, use_container_width=True)
+            is_next = st.button(label=texts.next, use_container_width=True, disabled=True if is_selected_same_face else False)
+
+        if is_selected_same_face:
+            st.warning(body=texts.warning_same_person)
 
         if is_back:
             StatesSState.set(state=States.SET_DETECTED_FACES_2)
             return True
         elif is_other:
-            if NSelected2SState.get() < detected_faces.n_faces - 1:
+            if NSelected2SState.get() < detected_faces2.n_faces - 1:
                 NSelected2SState.count_up()
             else:
                 NSelected2SState.reset()
