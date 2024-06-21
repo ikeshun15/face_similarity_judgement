@@ -23,7 +23,7 @@ class Texts:
 
     @property
     def authers(self) -> str:
-        return "Created by [🦥 Takanari Shimbo](https://github.com/TakanariShimbo), [🍓 Shunichi Ikezu](https://github.com/ikeshun15)"
+        return "Created by [🌵 Takanari Shimbo](https://github.com/TakanariShimbo), [🍓 Shunichi Ikezu](https://github.com/ikeshun15)"
 
     @property
     def photo_of_person1(self) -> str:
