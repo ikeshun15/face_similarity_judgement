@@ -117,7 +117,7 @@ class HomeView:
     @classmethod
     def set_detected_faces_2_components(cls) -> bool:
         texts = TextsSState.get()
-        st.markdown(body=f"###### {texts.image1_uploader}")
+        st.markdown(body=f"###### {texts.image2_uploader}")
 
         ok_types = ["png", "jpg", "jpeg", "bmp", "webp", "heic"]
         uploaded_file = st.file_uploader(label=texts.photo_of_person2, type=ok_types, accept_multiple_files=False, label_visibility="collapsed")
