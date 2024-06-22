@@ -5,6 +5,14 @@ class Texts:
     def __init__(self, lang: Literal["jp", "en"]) -> None:
         self._lang = lang
 
+    @classmethod
+    def get_another_texts(cls, texts: "Texts") -> "Texts":
+        if texts.is_en:
+            return Texts(lang="jp")
+        elif texts.is_jp:
+            return Texts(lang="en")
+        raise Exception("lang at Texts should be 'ja' or 'en'!")
+
     @property
     def is_jp(self) -> bool:
         return self._lang == "jp"
@@ -22,8 +30,13 @@ class Texts:
         raise Exception("lang at Texts should be 'ja' or 'en'!")
 
     @property
-    def authers(self) -> str:
-        return "Created by [🌵 Takanari Shimbo](https://github.com/TakanariShimbo), [🍓 Shunichi Ikezu](https://github.com/ikeshun15)"
+    def footer(self) -> str:
+        footer = """
+        Do We Look ALike?  
+        Created by [🌵 Takanari Shimbo](https://github.com/TakanariShimbo), [🍓 Shunichi Ikezu](https://github.com/ikeshun15)  
+        Powered by [InsightFace](https://github.com/deepinsight/insightface)  
+        """
+        return footer
 
     @property
     def photo_of_person1(self) -> str:

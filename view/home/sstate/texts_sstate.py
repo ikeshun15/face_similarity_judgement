@@ -15,6 +15,11 @@ class TextsSState:
     def set(texts: Texts) -> None:
         st.session_state[TEXTS] = texts
 
+    @classmethod
+    def change_lang(cls) -> None:
+        texts = cls.get()
+        st.session_state[TEXTS] = Texts.get_another_texts(texts=texts)
+
     @staticmethod
     def is_initialized_already() -> bool:
         if TEXTS in st.session_state:
