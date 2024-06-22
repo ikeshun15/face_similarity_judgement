@@ -5,21 +5,27 @@ from insightface.app import FaceAnalysis
 from insightface.app.common import Face
 from insightface.model_zoo.model_zoo import get_model, RetinaFace, ArcFaceONNX
 
-from .settting import Setting
+
+MODEL_NAME = "buffalo_l"
+DETECTOR_FILENAME = "det_10g.onnx"
+ENCODER_FILENAME = "w600k_r50.onnx"
+PARENT_DIR_PATH = "./insight_face_models/"
+DETECTOR_PATH = f"{PARENT_DIR_PATH}models/{MODEL_NAME}/{DETECTOR_FILENAME}"
+ENCODER_PATH = f"{PARENT_DIR_PATH}models/{MODEL_NAME}/{ENCODER_FILENAME}"
 
 
-def download_model_if_not_exists() -> None:
-    if not os.path.isdir(s=Setting.ROOT_DIR_PATH):
-        FaceAnalysis(name=Setting.MODEL_NAME, root=Setting.ROOT_DIR_PATH)
+def download_model_if_not_exists(model_name: str = MODEL_NAME, parent_dir_path: str = PARENT_DIR_PATH) -> None:
+    if not os.path.isdir(s=parent_dir_path):
+        FaceAnalysis(name=model_name, root=parent_dir_path)
 
 
 class FaceRecognizer:
-    def __init__(self) -> None:
-        detector = get_model(Setting.DETECTOR_PATH)
+    def __init__(self, detector_path: str = DETECTOR_PATH, encoder_path: str = ENCODER_PATH) -> None:
+        detector = get_model(name=detector_path)
         assert type(detector) == RetinaFace
         detector.prepare(ctx_id=0, input_size=(640, 640))
 
-        encoder = get_model(Setting.ENCODER_PATH)
+        encoder = get_model(name=encoder_path)
         assert type(encoder) == ArcFaceONNX
         encoder.prepare(ctx_id=0)
 
