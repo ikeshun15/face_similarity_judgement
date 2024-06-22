@@ -21,9 +21,7 @@ class NSelected1SState:
     def count_up() -> None:
         st.session_state[N_SELECTED_1] += 1
 
-    @staticmethod
-    def is_initialized_already() -> bool:
+    @classmethod
+    def init(cls) -> None:
         if N_SELECTED_1 in st.session_state:
-            return True
-        else:
-            return False
+            cls.set(n_selected=0)

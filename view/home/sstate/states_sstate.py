@@ -15,9 +15,8 @@ class StatesSState:
     def set(state: States) -> None:
         st.session_state[STATES] = state
 
-    @staticmethod
-    def is_initialized_already() -> bool:
+    @classmethod
+    def init(cls) -> None:
         if STATES in st.session_state:
-            return True
-        else:
-            return False
+            init_states = States.SET_DETECTED_FACES_1
+            cls.set(state=init_states)

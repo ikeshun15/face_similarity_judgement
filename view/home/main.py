@@ -21,17 +21,10 @@ class HomeView:
         with st_lottie_spinner(animation_source=PROCESSING_LOTTIE, height=200):
             download_model_if_not_exists()
 
-        if not TextsSState.is_initialized_already():
-            TextsSState.set(texts=Texts(lang="en"))
-
-        if not NSelected1SState.is_initialized_already():
-            NSelected1SState.set(n_selected=0)
-
-        if not NSelected2SState.is_initialized_already():
-            NSelected2SState.set(n_selected=0)
-
-        if not StatesSState.is_initialized_already():
-            StatesSState.set(state=States.SET_DETECTED_FACES_1)
+        TextsSState.init()
+        NSelected1SState.init()
+        NSelected2SState.init()
+        StatesSState.init()
 
     @classmethod
     def page_header_components(cls):
@@ -40,6 +33,7 @@ class HomeView:
         style = "<style>h3 {text-align: center;}</style>"
         st.markdown(style, unsafe_allow_html=True)
         st.markdown(f"### {texts.title}")
+
         _, right = st.columns([3, 1])
         with right:
             st.button(
@@ -51,6 +45,7 @@ class HomeView:
     @staticmethod
     def page_footer_components():
         texts = TextsSState.get()
+
         style = "<style>p {text-align: center;}</style>"
         st.markdown(style, unsafe_allow_html=True)
         st.markdown(texts.footer)

@@ -20,9 +20,8 @@ class TextsSState:
         texts = cls.get()
         st.session_state[TEXTS] = Texts.get_another_texts(texts=texts)
 
-    @staticmethod
-    def is_initialized_already() -> bool:
+    @classmethod
+    def init(cls) -> None:
         if TEXTS in st.session_state:
-            return True
-        else:
-            return False
+            init_texts = Texts(lang="en")
+            cls.set(texts=init_texts)
