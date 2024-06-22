@@ -8,7 +8,7 @@ FONT_PATH = "./data/DejaVuSans.ttf"
 HEART_IMAGE_PATH = "./data/heart.png"
 
 
-class ConbindedImage:
+class ConbinedImage:
     def __init__(
         self,
         image_rgb_1: Image.Image,
@@ -47,41 +47,9 @@ class ConbindedImage:
         conbined_image.paste(im=logo_image, box=(margin // 2, image_size[1] - margin // 2))
         self._image = conbined_image
 
-    @classmethod
-    def based_similarity(
-        cls,
-        detected_faces1: DetectedFaces,
-        n_selected1: int,
-        detected_faces2: DetectedFaces,
-        n_selected2: int,
-    ) -> "ConbindedImage":
-        face1 = detected_faces1.get_face(n=n_selected1)
-        face2 = detected_faces2.get_face(n=n_selected2)
-        image_rgb_1 = detected_faces1.get_face_image(n=n_selected1, trim_factor=2.0, dsize=(500, 500))
-        image_rgb_2 = detected_faces2.get_face_image(n=n_selected2, trim_factor=2.0, dsize=(500, 500))
-        face_recognizer = FaceRecognizerFactory.create_as_singleton()
-        cosine_similarity = face_recognizer.encode_faces_and_estimate_cosine_similarity(
-            image_rgb1=detected_faces1.image_rgb, face1=face1, image_rgb2=detected_faces2.image_rgb, face2=face2
-        )
-        percent_similarity = cls._convert_cosine_to_percent(cosine_value=cosine_similarity)
-        return cls(
-            image_rgb_1=image_rgb_1,
-            image_rgb_2=image_rgb_2,
-            percent_value=percent_similarity,
-        )
-
     @property
     def image(self) -> Image.Image:
         return self._image
-
-    @staticmethod
-    def _convert_cosine_to_percent(cosine_value: float) -> int:
-        percent_value = int((abs(cosine_value) ** (2 / 3)) * 150 + 30)
-        if percent_value > 100:
-            percent_value = 100
-        if percent_value < 0:
-            percent_value = 0
-        return percent_value
 
     @staticmethod
     def _resize(image: Image.Image, max_size: tuple[int, int], margin: int = 0) -> Image.Image:

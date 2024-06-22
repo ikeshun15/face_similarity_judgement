@@ -1,13 +1,10 @@
-from PIL import Image
-import pillow_heif
 import streamlit as st
-from streamlit.runtime.uploaded_file_manager import UploadedFile
 from streamlit_lottie import st_lottie_spinner
 
-from model import download_model_if_not_exists, PROCESSING_LOTTIE, DetectedFaces, ConbindedImage
-from .sstate import StatesSState, DetectedFaces1SState, DetectedFaces2SState, NSelected1SState, NSelected2SState, TextsSState, ConbindedImageSState
+from model import download_model_if_not_exists, PROCESSING_LOTTIE, ConbinedImage
+from .sstate import StatesSState, DetectedFaces1SState, DetectedFaces2SState, NSelected1SState, NSelected2SState, TextsSState, ConbinedImageSState
 from .states import States
-from .texts import Texts
+from .recognizer import detect_faces, conbine_images_based_similarity
 
 
 OK_IMAGE_EXTS = ["png", "jpg", "jpeg", "bmp", "webp", "heic"]
@@ -56,17 +53,16 @@ class HomeView:
 
         st.markdown(body=f"###### {texts.uploade_image1}")
 
-        uploaded_file = st.file_uploader(
+        uploaded_file1 = st.file_uploader(
             label=texts.photo_of_person1,
             type=OK_IMAGE_EXTS,
             accept_multiple_files=False,
             label_visibility="collapsed",
         )
 
-        if uploaded_file is not None:
+        if uploaded_file1 is not None:
             with st_lottie_spinner(animation_source=PROCESSING_LOTTIE, height=200):
-                image_rgb = cls._open_image_as_rgb(uploaded_image=uploaded_file)
-                detected_faces1 = DetectedFaces.detect(image_rgb=image_rgb)
+                detected_faces1 = detect_faces(uploaded_image=uploaded_file1)
 
                 if detected_faces1.n_faces == 0:
                     st.warning(body=texts.warning_no_person)
@@ -129,7 +125,7 @@ class HomeView:
 
         st.markdown(body=f"###### {texts.uploade_image2}")
 
-        uploaded_file = st.file_uploader(
+        uploaded_file2 = st.file_uploader(
             label=texts.photo_of_person2,
             type=OK_IMAGE_EXTS,
             accept_multiple_files=False,
@@ -157,23 +153,22 @@ class HomeView:
                 on_click=_callback,
             )
 
-        if uploaded_file is not None:
+        if uploaded_file2 is not None:
             with st.spinner(text=texts.loading):
-                image_rgb = cls._open_image_as_rgb(uploaded_image=uploaded_file)
-                detected_faces2 = DetectedFaces.detect(image_rgb=image_rgb)
+                detected_faces2 = detect_faces(uploaded_image=uploaded_file2)
 
                 if detected_faces2.n_faces == 0:
                     st.warning(body=texts.warning_no_person)
                     return False
 
                 if detected_faces2.n_faces == 1:
-                    conbined_image = ConbindedImage.based_similarity(
+                    conbined_image = conbine_images_based_similarity(
                         detected_faces1=detected_faces1,
                         n_selected1=n_selected1,
                         detected_faces2=detected_faces2,
                         n_selected2=0,
                     )
-                    ConbindedImageSState.set(conbinded_image=conbined_image)
+                    ConbinedImageSState.set(conbined_image=conbined_image)
                     StatesSState.set(state=States.SHOW_RESULT)
                 else:
                     DetectedFaces2SState.set(detected_faces=detected_faces2)
@@ -228,13 +223,13 @@ class HomeView:
 
         if is_next:
             with st_lottie_spinner(animation_source=PROCESSING_LOTTIE, height=200):
-                conbined_image = ConbindedImage.based_similarity(
+                conbined_image = conbine_images_based_similarity(
                     detected_faces1=detected_faces1,
                     n_selected1=n_selected1,
                     detected_faces2=detected_faces2,
                     n_selected2=n_selected2,
                 )
-                ConbindedImageSState.set(conbinded_image=conbined_image)
+                ConbinedImageSState.set(conbined_image=conbined_image)
                 StatesSState.set(state=States.SHOW_RESULT)
             return True
 
@@ -243,17 +238,17 @@ class HomeView:
     @classmethod
     def show_result_components(cls) -> bool:
         texts = TextsSState.get()
-        conbinded_image = ConbindedImageSState.get()
+        conbined_image = ConbinedImageSState.get()
 
         st.markdown(body=f"###### {texts.result}")
-        st.image(conbinded_image.image, use_column_width=True)
+        st.image(conbined_image.image, use_column_width=True)
         st.balloons()
 
         _, center, _ = st.columns([1.5, 1, 1.5])
         with center:
 
             def _callback():
-                ConbindedImageSState.clear()
+                ConbinedImageSState.clear()
                 DetectedFaces1SState.clear()
                 DetectedFaces2SState.clear()
                 NSelected1SState.reset()
@@ -272,6 +267,7 @@ class HomeView:
     def display_components(cls) -> None:
         cls.init()
         cls.page_header_components()
+
         if StatesSState.get() == States.SET_DETECTED_FACES_1:
             is_call_rerun = cls.set_detected_faces_1_components()
         elif StatesSState.get() == States.SELECT_N_FACE_1:
@@ -284,27 +280,8 @@ class HomeView:
             is_call_rerun = cls.show_result_components()
         else:
             is_call_rerun = cls.set_detected_faces_1_components()
+
         cls.page_footer_components()
 
         if is_call_rerun:
             st.rerun()
-
-    @staticmethod
-    def _open_image_as_rgb(uploaded_image: UploadedFile) -> Image.Image:
-        uploaded_image_name: str = uploaded_image.name
-        file_extension = uploaded_image_name.split(".")[-1].lower()
-
-        if file_extension == "heic":
-            heif_file = pillow_heif.read_heif(uploaded_image)
-            image = Image.frombytes(
-                heif_file.mode,
-                heif_file.size,
-                heif_file.data,
-                "raw",
-                heif_file.mode,
-                heif_file.stride,
-            )
-        else:
-            image = Image.open(uploaded_image)
-
-        return image.convert("RGB")
