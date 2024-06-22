@@ -22,7 +22,7 @@ class ConbindedImage:
 
         conbined_image = Image.new("RGBA", image_size, color=background_color)
         draw = ImageDraw.Draw(conbined_image)
-        font = ImageFont.truetype(Setting.FONT_TYPE, 20)
+        font = ImageFont.truetype(Setting.FONT_PATH, 20)
         x0 = int(image_size[0] - 280 - margin)
         y0 = int(image_size[1] - margin / 2.5)
         draw.text((x0, y0), f"Created with #DoWeLookAlike?", fill=text_color, font=font)
@@ -104,6 +104,6 @@ class ConbindedImage:
     def _get_heart_image(percent_value: int, text_color: str) -> Image.Image:
         heart_image = Image.open(Setting.HEART_IMAGE_PATH).convert("RGBA")
         draw = ImageDraw.Draw(heart_image)
-        font = ImageFont.truetype(Setting.FONT_TYPE, 80)
+        font = ImageFont.truetype(Setting.FONT_PATH, 80)
         draw.text((130, 150), f"{percent_value}%", fill=text_color, font=font)
         return heart_image

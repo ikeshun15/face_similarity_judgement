@@ -9,9 +9,6 @@ services:
     ports:
       - "${SERVER_PORT}:8501"
 
-    environment:
-      - FONT_TYPE=${FONT_TYPE}
-
     command: streamlit run server.py
 
     restart: always

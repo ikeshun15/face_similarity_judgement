@@ -1,13 +1,6 @@
-import os
-from dotenv import load_dotenv
-
-load_dotenv()
-
-
 class Setting:
-    FONT_TYPE = os.environ["FONT_TYPE"]
+    FONT_PATH = "./data/DejaVuSans.ttf"
     HEART_IMAGE_PATH = "./data/heart.png"
-
     PROCESSING_LOTTIE_PATH = "./data/processing.json"
 
     MODEL_NAME = "buffalo_l"
