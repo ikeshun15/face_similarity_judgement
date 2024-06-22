@@ -22,6 +22,6 @@ class TextsSState:
 
     @classmethod
     def init(cls) -> None:
-        if TEXTS in st.session_state:
+        if not TEXTS in st.session_state:
             init_texts = Texts(lang="en")
             cls.set(texts=init_texts)

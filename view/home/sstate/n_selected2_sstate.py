@@ -23,5 +23,5 @@ class NSelected2SState:
 
     @classmethod
     def init(cls) -> None:
-        if N_SELECTED_2 in st.session_state:
+        if not N_SELECTED_2 in st.session_state:
             cls.set(n_selected=0)
