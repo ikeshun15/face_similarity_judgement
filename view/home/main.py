@@ -129,6 +129,7 @@ class HomeView:
     @classmethod
     def set_detected_faces_2_components(cls) -> bool:
         texts = TextsSState.get()
+        n_selected1 = NSelected1SState.get()
         detected_faces1 = DetectedFaces1SState.get()
 
         st.markdown(body=f"###### {texts.uploade_image2}")
@@ -170,12 +171,20 @@ class HomeView:
                     st.warning(body=texts.warning_no_person)
                     return False
 
-                DetectedFaces2SState.set(detected_faces=detected_faces2)
                 if detected_faces2.n_faces == 1:
+                    conbined_image = ConbindedImage.based_similarity(
+                        detected_faces1=detected_faces1,
+                        n_selected1=n_selected1,
+                        detected_faces2=detected_faces2,
+                        n_selected2=0,
+                    )
+                    ConbindedImageSState.set(conbinded_image=conbined_image)
                     StatesSState.set(state=States.SHOW_RESULT)
                 else:
+                    DetectedFaces2SState.set(detected_faces=detected_faces2)
                     StatesSState.set(state=States.SELECT_N_FACE_2)
             return True
+
         return False
 
     @classmethod
