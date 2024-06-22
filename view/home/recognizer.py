@@ -6,6 +6,16 @@ from streamlit.runtime.uploaded_file_manager import UploadedFile
 from model import FaceRecognizerFactory, DetectedFaces, ConbinedImage
 
 
+CONBINE_TRIM_FACTOR = 2.0
+CONBINE_DSIZE = (500, 500)
+CONBINED_IMAGE_SIZE = (1300, 500)
+CONBINED_IMAGE_RATIOS = (5, 3, 5)
+CONBINED_IMAGE_MARGIN = 80
+CONBINED_IMAGE_BG_COLOR = "#FDF9DA"
+CONBINED_IMAGE_TEXT_COLOR = "#8B3626"
+CONBINED_IMAGE_LOGO = "Created with #DoWeLookAlike?"
+
+
 def detect_faces(
     uploaded_image: UploadedFile,
 ) -> DetectedFaces:
@@ -24,17 +34,26 @@ def conbine_images_based_similarity(
 ) -> ConbinedImage:
     face1 = detected_faces1.get_face(n=n_selected1)
     face2 = detected_faces2.get_face(n=n_selected2)
-    image_rgb_1 = detected_faces1.get_face_image(n=n_selected1, trim_factor=2.0, dsize=(500, 500))
-    image_rgb_2 = detected_faces2.get_face_image(n=n_selected2, trim_factor=2.0, dsize=(500, 500))
+    image_rgb_1 = detected_faces1.get_face_image(n=n_selected1, trim_factor=CONBINE_TRIM_FACTOR, dsize=CONBINE_DSIZE)
+    image_rgb_2 = detected_faces2.get_face_image(n=n_selected2, trim_factor=CONBINE_TRIM_FACTOR, dsize=CONBINE_DSIZE)
     face_recognizer = FaceRecognizerFactory.create_as_singleton()
     cosine_similarity = face_recognizer.encode_faces_and_estimate_cosine_similarity(
-        image_rgb1=detected_faces1.image_rgb, face1=face1, image_rgb2=detected_faces2.image_rgb, face2=face2
+        image_rgb1=detected_faces1.image_rgb,
+        face1=face1,
+        image_rgb2=detected_faces2.image_rgb,
+        face2=face2,
     )
     percent_similarity = _convert_cosine_to_percent(cosine_value=cosine_similarity)
     return ConbinedImage(
         image_rgb_1=image_rgb_1,
         image_rgb_2=image_rgb_2,
         percent_value=percent_similarity,
+        image_size=CONBINED_IMAGE_SIZE,
+        image_ratios=CONBINED_IMAGE_RATIOS,
+        margin=CONBINED_IMAGE_MARGIN,
+        bg_color=CONBINED_IMAGE_BG_COLOR,
+        text_color=CONBINED_IMAGE_TEXT_COLOR,
+        logo_text=CONBINED_IMAGE_LOGO,
     )
 
 

@@ -1,7 +1,6 @@
 from PIL import Image, ImageDraw, ImageFont
 
-from .face_recognizer import FaceRecognizerFactory
-from .detected_faces import DetectedFaces
+from .size import Size
 
 
 FONT_PATH = "./data/DejaVuSans.ttf"
@@ -17,34 +16,46 @@ class ConbinedImage:
         image_size: tuple[int, int] = (1300, 500),
         image_ratios: tuple[int, int, int] = (5, 3, 5),
         margin: int = 80,
-        bg_color: str = "#FDF9DA",
-        text_color: str = "#8B3626",
+        bg_color: str = "#FFFFFF",
+        text_color: str = "#000000",
+        logo_text: str = "Created with #ABCDEFG",
     ) -> None:
-        max_size_l = (int(image_size[0] * image_ratios[0] / sum(image_ratios)), image_size[1])
-        max_size_r = (int(image_size[0] * image_ratios[2] / sum(image_ratios)), image_size[1])
-        max_size_m = (int(image_size[0] * image_ratios[1] / sum(image_ratios)), image_size[1])
+        max_size = Size.from_tuple(size=image_size)
+        max_size_l = Size(width=max_size.w * image_ratios[0] / sum(image_ratios), height=max_size.h)
+        max_size_r = Size(width=max_size.w * image_ratios[2] / sum(image_ratios), height=max_size.h)
+        max_size_m = Size(width=max_size.w * image_ratios[1] / sum(image_ratios), height=max_size.h)
+        middle_image_factor = (percent_value / 100) * 2 / 3 + 1 / 3
+        size_m = Size(width=max_size_m.w * middle_image_factor, height=max_size_m.h * middle_image_factor)
+        max_size_logo = Size(max_size.w, margin // 2)
 
         image_rgba_1 = image_rgb_1.convert(mode="RGBA")
         image_rgba_2 = image_rgb_2.convert(mode="RGBA")
         heart_image_rgba = self._get_heart_image(percent_value=percent_value, text_color=bg_color)
-        text_image_rgba = self._get_text_image(text=f"Created with #DoWeLookAlike?", text_color=text_color)
+        text_image_rgba = self._get_text_image(text=logo_text, text_color=text_color)
 
         left_image = self._resize(image=image_rgba_1, max_size=max_size_l)
         right_image = self._resize(image=image_rgba_2, max_size=max_size_r)
-        middle_image = self._resize(image=heart_image_rgba, max_size=max_size_m)
-        middle_image_factor = percent_value / 200 + 0.5
-        middle_image = middle_image.resize((int(middle_image.width * middle_image_factor), int(middle_image.height * middle_image_factor)))
-        logo_image = self._resize(image=text_image_rgba, max_size=(image_size[0], margin // 2), margin=margin // 10)
+        middle_image = self._resize(image=heart_image_rgba, max_size=size_m)
+        logo_image = self._resize(image=text_image_rgba, max_size=max_size_logo, margin=margin // 10)
 
-        pasted_image = Image.new(mode="RGBA", size=image_size)
-        pasted_image.paste(im=left_image, box=((max_size_l[0] - left_image.width) // 2, (max_size_l[1] - left_image.height) // 2))
-        pasted_image.paste(im=middle_image, box=((max_size_m[0] - middle_image.width) // 2 + max_size_l[0], (max_size_m[1] - middle_image.height) // 2))
-        pasted_image.paste(im=right_image, box=((max_size_r[0] - right_image.width) // 2 + max_size_l[0] + max_size_m[0], (max_size_r[1] - right_image.height) // 2))
-        pasted_image = self._resize(image=pasted_image, max_size=image_size, margin=margin)
+        pasted_image = Image.new(mode="RGBA", size=max_size.tuple)
+        pasted_image.paste(
+            im=left_image,
+            box=((max_size_l.w - left_image.width) // 2, (max_size_l.h - left_image.height) // 2),
+        )
+        pasted_image.paste(
+            im=middle_image,
+            box=((max_size_m.w - middle_image.width) // 2 + max_size_l.w, (max_size_m.h - middle_image.height) // 2),
+        )
+        pasted_image.paste(
+            im=right_image,
+            box=((max_size_r.w - right_image.width) // 2 + max_size_l.w + max_size_m.w, (max_size_r.h - right_image.height) // 2),
+        )
+        pasted_image = self._resize(image=pasted_image, max_size=max_size, margin=margin)
 
-        conbined_image = Image.new(mode="RGBA", size=image_size, color=bg_color)
+        conbined_image = Image.new(mode="RGBA", size=max_size.tuple, color=bg_color)
         conbined_image.paste(im=pasted_image, box=(margin // 2, margin // 2))
-        conbined_image.paste(im=logo_image, box=(margin // 2, image_size[1] - margin // 2))
+        conbined_image.paste(im=logo_image, box=(margin // 2, max_size.h - margin // 2))
         self._image = conbined_image
 
     @property
@@ -52,22 +63,17 @@ class ConbinedImage:
         return self._image
 
     @staticmethod
-    def _resize(image: Image.Image, max_size: tuple[int, int], margin: int = 0) -> Image.Image:
-        max_width, max_height = max_size
-        max_width -= margin
-        max_height -= margin
+    def _resize(image: Image.Image, max_size: Size, margin: int = 0) -> Image.Image:
+        true_max_size = Size(width=max_size.w - margin, height=max_size.h - margin)
+        image_size = Size(width=image.width, height=image.height)
+        ideal_width = int(true_max_size.h * image_size.ratio)
 
-        image_ratio = image.width / image.height
-        ideal_width = int(max_height * image_ratio)
-
-        if ideal_width <= max_width:
-            new_width = ideal_width
-            new_height = max_height
+        if ideal_width <= true_max_size.w:
+            new_image_size = Size(width=ideal_width, height=true_max_size.h)
         else:
-            new_width = max_width
-            new_height = int(max_height * max_width / ideal_width)
+            new_image_size = Size(width=true_max_size.w, height=true_max_size.h * true_max_size.w / ideal_width)
 
-        resized_image = image.resize((new_width, new_height))
+        resized_image = image.resize(size=new_image_size.tuple)
         return resized_image
 
     @staticmethod
