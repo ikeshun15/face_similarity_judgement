@@ -7,6 +7,7 @@ from model import download_model_if_not_exists, PROCESSING_LOTTIE
 from .sstate import StatesSState, DetectedFaces1SState, DetectedFaces2SState, NSelected1SState, NSelected2SState, TextsSState, ConbinedImageSState
 from .states import States
 from .recognizer import detect_faces, conbine_images_based_similarity
+from ..icon import TITLE_ICON_SVG
 
 
 OK_IMAGE_EXTS = ["png", "jpg", "jpeg", "bmp", "webp", "heic"]
@@ -34,10 +35,8 @@ class HomeView:
     @classmethod
     def page_header_components(cls):
         texts = TextsSState.get()
-
-        style = "<style>h3 {text-align: center;}</style>"
+        style = "<style>h3 {text-align: center;}</style>" + f"<h3>{TITLE_ICON_SVG} {texts.title}</h3>"
         st.markdown(style, unsafe_allow_html=True)
-        st.markdown(f"### {texts.title}")
 
         _, right = st.columns([3, 1])
         with right:

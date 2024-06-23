@@ -24,9 +24,9 @@ class Texts:
     @property
     def title(self) -> str:
         if self.is_jp:
-            return "🥰 私たちって似てる？"
+            return "私たちって似てる？"
         elif self.is_en:
-            return "🥰 Do We Look Alike?"
+            return "Do We Look Alike?"
         raise Exception("lang at Texts should be 'ja' or 'en'!")
 
     @property
