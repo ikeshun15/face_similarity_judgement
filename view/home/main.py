@@ -47,6 +47,33 @@ class HomeView:
                 on_click=lambda: TextsSState.change_lang(),
             )
 
+        st.markdown(
+            """
+            <style>
+            .stProgress .st-bo {
+                background-color: "#e0aaa0";
+            }
+            </style>
+            """,
+            unsafe_allow_html=True,
+        )
+
+        if StatesSState.get() == States.SET_DETECTED_FACES_1:
+            progress = 1
+        elif StatesSState.get() == States.SELECT_N_FACE_1:
+            progress = 26
+        elif StatesSState.get() == States.SET_DETECTED_FACES_2:
+            progress = 51
+        elif StatesSState.get() == States.SELECT_N_FACE_2:
+            progress = 76
+        elif StatesSState.get() == States.SHOW_RESULT:
+            progress = 100
+        else:
+            raise Exception("Unexpected states!")
+
+        p = st.progress(value=progress)
+        p.progress(value=progress)
+
     @staticmethod
     def page_footer_components():
         texts = TextsSState.get()
@@ -89,6 +116,7 @@ class HomeView:
 
                 DetectedFaces1SState.set(detected_faces=detected_faces1)
                 StatesSState.set(state=States.SELECT_N_FACE_1)
+                NSelected1SState.reset()
             return True
 
         return False
@@ -169,6 +197,7 @@ class HomeView:
 
             def _callback():
                 DetectedFaces2SState.set(detected_faces=detected_faces1)
+                NSelected2SState.reset()
                 StatesSState.set(state=States.SELECT_N_FACE_2)
 
             st.button(
@@ -187,6 +216,7 @@ class HomeView:
                     return False
 
                 DetectedFaces2SState.set(detected_faces=detected_faces2)
+                NSelected2SState.reset()
                 StatesSState.set(state=States.SELECT_N_FACE_2)
             return True
 
