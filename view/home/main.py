@@ -60,9 +60,20 @@ class HomeView:
             label_visibility="collapsed",
         )
 
+        taken_file1 = st.camera_input(
+            label=texts.photo_of_person1,
+            label_visibility="collapsed",
+        )
+
+        file1 = None
         if uploaded_file1 is not None:
+            file1 = uploaded_file1
+        elif taken_file1 is not None:
+            file1 = taken_file1
+
+        if file1 is not None:
             with st_lottie_spinner(animation_source=PROCESSING_LOTTIE, height=200):
-                detected_faces1 = detect_faces(uploaded_image=uploaded_file1)
+                detected_faces1 = detect_faces(uploaded_image=file1)
 
                 if detected_faces1.n_faces == 0:
                     st.warning(body=texts.warning_no_person)
@@ -132,6 +143,17 @@ class HomeView:
             label_visibility="collapsed",
         )
 
+        taken_file2 = st.camera_input(
+            label=texts.photo_of_person1,
+            label_visibility="collapsed",
+        )
+
+        file2 = None
+        if uploaded_file2 is not None:
+            file2 = uploaded_file2
+        elif taken_file2 is not None:
+            file2 = taken_file2
+
         left, _, right = st.columns([1, 2, 1])
         with left:
             st.button(
@@ -153,9 +175,9 @@ class HomeView:
                 on_click=_callback,
             )
 
-        if uploaded_file2 is not None:
-            with st.spinner(text=texts.loading):
-                detected_faces2 = detect_faces(uploaded_image=uploaded_file2)
+        if file2 is not None:
+            with st_lottie_spinner(animation_source=PROCESSING_LOTTIE, height=200):
+                detected_faces2 = detect_faces(uploaded_image=file2)
 
                 if detected_faces2.n_faces == 0:
                     st.warning(body=texts.warning_no_person)

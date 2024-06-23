@@ -65,9 +65,9 @@ class Texts:
     @property
     def change_lang(self) -> str:
         if self.is_jp:
-            return "🗾 言語切替"
+            return "🗽 English"
         elif self.is_en:
-            return "🗽 Language"
+            return "🗾 Japanese"
         raise Exception("lang at Texts should be 'ja' or 'en'!")
 
     @property
@@ -121,33 +121,33 @@ class Texts:
     @property
     def uploade_image1(self) -> str:
         if self.is_jp:
-            return "一人目の写真をアップロードしてね"
+            return "ステップ1：一人目の写真をアップロードしてね"
         elif self.is_en:
-            return "Please upload a photo of the first person."
+            return "Step1: Please upload a photo of the first person."
         raise Exception("lang at Texts should be 'ja' or 'en'!")
 
     @property
     def select_image1(self) -> str:
         if self.is_jp:
-            return "一人目の顔写真を選んでね"
+            return "ステップ2：一人目の顔写真を選んでね"
         elif self.is_en:
-            return "Please select a photo of the first person's face."
+            return "Step2: Please select a photo of the first person's face."
         raise Exception("lang at Texts should be 'ja' or 'en'!")
 
     @property
     def uploade_image2(self) -> str:
         if self.is_jp:
-            return "二人目の写真をアップロードしてね"
+            return "ステップ3：二人目の写真をアップロードしてね"
         elif self.is_en:
-            return "Please upload a photo of the second person."
+            return "Step3: Please upload a photo of the second person."
         raise Exception("lang at Texts should be 'ja' or 'en'!")
 
     @property
     def select_image2(self) -> str:
         if self.is_jp:
-            return "二人目の顔写真を選んでね"
+            return "ステップ4：二人目の顔写真を選んでね"
         elif self.is_en:
-            return "Please select a photo of the second person's face."
+            return "Step4: Please select a photo of the second person's face."
         raise Exception("lang at Texts should be 'ja' or 'en'!")
 
     @property
@@ -156,12 +156,4 @@ class Texts:
             return "類似度は..."
         elif self.is_en:
             return "Similarity is ..."
-        raise Exception("lang at Texts should be 'ja' or 'en'!")
-
-    @property
-    def loading(self) -> str:
-        if self.is_jp:
-            return "読み込み中..."
-        elif self.is_en:
-            return "loading..."
         raise Exception("lang at Texts should be 'ja' or 'en'!")
