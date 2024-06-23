@@ -39,22 +39,6 @@ class Texts:
         return footer
 
     @property
-    def photo_of_person1(self) -> str:
-        if self.is_jp:
-            return "一人目の写真"
-        elif self.is_en:
-            return "Photo of Person 1"
-        raise Exception("lang at Texts should be 'ja' or 'en'!")
-
-    @property
-    def photo_of_person2(self) -> str:
-        if self.is_jp:
-            return "二人目の写真"
-        elif self.is_en:
-            return "Photo of Person 2"
-        raise Exception("lang at Texts should be 'ja' or 'en'!")
-
-    @property
     def warning_no_person(self) -> str:
         if self.is_jp:
             return "🙅 一人以上映っている写真にしてね"
@@ -119,11 +103,11 @@ class Texts:
         raise Exception("lang at Texts should be 'ja' or 'en'!")
 
     @property
-    def uploade_image1(self) -> str:
+    def uploade_or_take_image1(self) -> str:
         if self.is_jp:
-            return "ステップ1：一人目の写真をアップロードしてね"
+            return "ステップ1：一人目の写真をアップロードするか撮影してね"
         elif self.is_en:
-            return "Step1: Please upload a photo of the first person."
+            return "Step1: Please upload or take a photo of the first person."
         raise Exception("lang at Texts should be 'ja' or 'en'!")
 
     @property
@@ -135,11 +119,11 @@ class Texts:
         raise Exception("lang at Texts should be 'ja' or 'en'!")
 
     @property
-    def uploade_image2(self) -> str:
+    def uploade_or_take_image2(self) -> str:
         if self.is_jp:
-            return "ステップ3：二人目の写真をアップロードしてね"
+            return "ステップ3：二人目の写真をアップロードするか撮影してね"
         elif self.is_en:
-            return "Step3: Please upload a photo of the second person."
+            return "Step3: Please upload or take a photo of the second person."
         raise Exception("lang at Texts should be 'ja' or 'en'!")
 
     @property

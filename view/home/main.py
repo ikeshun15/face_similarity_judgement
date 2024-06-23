@@ -1,7 +1,9 @@
+import time
+
 import streamlit as st
 from streamlit_lottie import st_lottie_spinner
 
-from model import download_model_if_not_exists, PROCESSING_LOTTIE, ConbinedImage
+from model import download_model_if_not_exists, PROCESSING_LOTTIE
 from .sstate import StatesSState, DetectedFaces1SState, DetectedFaces2SState, NSelected1SState, NSelected2SState, TextsSState, ConbinedImageSState
 from .states import States
 from .recognizer import detect_faces, conbine_images_based_similarity
@@ -22,6 +24,12 @@ class HomeView:
         NSelected1SState.init()
         NSelected2SState.init()
         StatesSState.init()
+
+    @staticmethod
+    def wakeup_components():
+        with st_lottie_spinner(animation_source=PROCESSING_LOTTIE, height=200):
+            time.sleep(1)
+            StatesSState.set(state=States.SET_DETECTED_FACES_1)
 
     @classmethod
     def page_header_components(cls):
@@ -48,49 +56,45 @@ class HomeView:
         st.markdown(texts.footer)
 
     @classmethod
-    def set_detected_faces_1_components(cls) -> bool:
+    def set_detected_faces1_components(cls) -> bool:
         texts = TextsSState.get()
 
-        st.markdown(body=f"###### {texts.uploade_image1}")
+        st.markdown(body=f"###### {texts.uploade_or_take_image1}")
 
-        uploaded_file1 = st.file_uploader(
-            label=texts.photo_of_person1,
+        uploaded_file = st.file_uploader(
+            label="uploader",
             type=OK_IMAGE_EXTS,
             accept_multiple_files=False,
             label_visibility="collapsed",
         )
 
-        taken_file1 = st.camera_input(
-            label=texts.photo_of_person1,
+        taken_file = st.camera_input(
+            label="taker",
             label_visibility="collapsed",
         )
 
-        file1 = None
-        if uploaded_file1 is not None:
-            file1 = uploaded_file1
-        elif taken_file1 is not None:
-            file1 = taken_file1
+        image_file = None
+        if uploaded_file is not None:
+            image_file = uploaded_file
+        elif taken_file is not None:
+            image_file = taken_file
 
-        if file1 is not None:
+        if image_file is not None:
             with st_lottie_spinner(animation_source=PROCESSING_LOTTIE, height=200):
-                detected_faces1 = detect_faces(uploaded_image=file1)
+                detected_faces1 = detect_faces(image_file=image_file)
 
                 if detected_faces1.n_faces == 0:
                     st.warning(body=texts.warning_no_person)
                     return False
 
                 DetectedFaces1SState.set(detected_faces=detected_faces1)
-
-                if detected_faces1.n_faces == 1:
-                    StatesSState.set(state=States.SET_DETECTED_FACES_2)
-                else:
-                    StatesSState.set(state=States.SELECT_N_FACE_1)
+                StatesSState.set(state=States.SELECT_N_FACE_1)
             return True
 
         return False
 
     @classmethod
-    def select_n_face_1_components(cls) -> bool:
+    def select_n_face1_components(cls) -> bool:
         texts = TextsSState.get()
         n_selected1 = NSelected1SState.get()
         detected_faces1 = DetectedFaces1SState.get()
@@ -129,30 +133,29 @@ class HomeView:
         return False
 
     @classmethod
-    def set_detected_faces_2_components(cls) -> bool:
+    def set_detected_faces2_components(cls) -> bool:
         texts = TextsSState.get()
-        n_selected1 = NSelected1SState.get()
         detected_faces1 = DetectedFaces1SState.get()
 
-        st.markdown(body=f"###### {texts.uploade_image2}")
+        st.markdown(body=f"###### {texts.uploade_or_take_image2}")
 
-        uploaded_file2 = st.file_uploader(
-            label=texts.photo_of_person2,
+        uploaded_file = st.file_uploader(
+            label="uploader",
             type=OK_IMAGE_EXTS,
             accept_multiple_files=False,
             label_visibility="collapsed",
         )
 
-        taken_file2 = st.camera_input(
-            label=texts.photo_of_person2,
+        taken_file = st.camera_input(
+            label="taker",
             label_visibility="collapsed",
         )
 
-        file2 = None
-        if uploaded_file2 is not None:
-            file2 = uploaded_file2
-        elif taken_file2 is not None:
-            file2 = taken_file2
+        image_file = None
+        if uploaded_file is not None:
+            image_file = uploaded_file
+        elif taken_file is not None:
+            image_file = taken_file
 
         left, _, right = st.columns([1, 2, 1])
         with left:
@@ -175,32 +178,22 @@ class HomeView:
                 on_click=_callback,
             )
 
-        if file2 is not None:
+        if image_file is not None:
             with st_lottie_spinner(animation_source=PROCESSING_LOTTIE, height=200):
-                detected_faces2 = detect_faces(uploaded_image=file2)
+                detected_faces2 = detect_faces(image_file=image_file)
 
                 if detected_faces2.n_faces == 0:
                     st.warning(body=texts.warning_no_person)
                     return False
 
-                if detected_faces2.n_faces == 1:
-                    conbined_image = conbine_images_based_similarity(
-                        detected_faces1=detected_faces1,
-                        n_selected1=n_selected1,
-                        detected_faces2=detected_faces2,
-                        n_selected2=0,
-                    )
-                    ConbinedImageSState.set(conbined_image=conbined_image)
-                    StatesSState.set(state=States.SHOW_RESULT)
-                else:
-                    DetectedFaces2SState.set(detected_faces=detected_faces2)
-                    StatesSState.set(state=States.SELECT_N_FACE_2)
+                DetectedFaces2SState.set(detected_faces=detected_faces2)
+                StatesSState.set(state=States.SELECT_N_FACE_2)
             return True
 
         return False
 
     @classmethod
-    def select_n_face_2_components(cls) -> bool:
+    def select_n_face2_components(cls) -> bool:
         texts = TextsSState.get()
         n_selected1 = NSelected1SState.get()
         detected_faces1 = DetectedFaces1SState.get()
@@ -288,20 +281,25 @@ class HomeView:
     @classmethod
     def display_components(cls) -> None:
         cls.init()
+
+        if StatesSState.get() == States.WAKE_UP:
+            cls.wakeup_components()
+            st.rerun()
+
         cls.page_header_components()
 
         if StatesSState.get() == States.SET_DETECTED_FACES_1:
-            is_call_rerun = cls.set_detected_faces_1_components()
+            is_call_rerun = cls.set_detected_faces1_components()
         elif StatesSState.get() == States.SELECT_N_FACE_1:
-            is_call_rerun = cls.select_n_face_1_components()
+            is_call_rerun = cls.select_n_face1_components()
         elif StatesSState.get() == States.SET_DETECTED_FACES_2:
-            is_call_rerun = cls.set_detected_faces_2_components()
+            is_call_rerun = cls.set_detected_faces2_components()
         elif StatesSState.get() == States.SELECT_N_FACE_2:
-            is_call_rerun = cls.select_n_face_2_components()
+            is_call_rerun = cls.select_n_face2_components()
         elif StatesSState.get() == States.SHOW_RESULT:
             is_call_rerun = cls.show_result_components()
         else:
-            is_call_rerun = cls.set_detected_faces_1_components()
+            raise Exception("Unexpected states!")
 
         cls.page_footer_components()
 

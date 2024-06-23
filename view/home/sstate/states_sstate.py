@@ -18,5 +18,5 @@ class StatesSState:
     @classmethod
     def init(cls) -> None:
         if not STATES in st.session_state:
-            init_states = States.SET_DETECTED_FACES_1
+            init_states = States.WAKE_UP
             cls.set(state=init_states)

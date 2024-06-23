@@ -17,9 +17,9 @@ CONBINED_IMAGE_LOGO = "Created with #DoWeLookAlike?"
 
 
 def detect_faces(
-    uploaded_image: UploadedFile,
+    image_file: UploadedFile,
 ) -> DetectedFaces:
-    image_rgb = _open_image_as_rgb(uploaded_image=uploaded_image)
+    image_rgb = _open_image_as_rgb(image_file=image_file)
     np_image_rgb = np.array(image_rgb, dtype=np.uint8)
     face_recognizer = FaceRecognizerFactory.create_as_singleton()
     faces = face_recognizer.detect_faces(image_rgb=np_image_rgb)
@@ -66,12 +66,12 @@ def _convert_cosine_to_percent(cosine_value: float) -> int:
     return percent_value
 
 
-def _open_image_as_rgb(uploaded_image: UploadedFile) -> Image.Image:
-    uploaded_image_name: str = uploaded_image.name
+def _open_image_as_rgb(image_file: UploadedFile) -> Image.Image:
+    uploaded_image_name: str = image_file.name
     file_extension = uploaded_image_name.split(".")[-1].lower()
 
     if file_extension == "heic":
-        heif_file = pillow_heif.read_heif(uploaded_image)
+        heif_file = pillow_heif.read_heif(image_file)
         image = Image.frombytes(
             heif_file.mode,
             heif_file.size,
@@ -81,6 +81,6 @@ def _open_image_as_rgb(uploaded_image: UploadedFile) -> Image.Image:
             heif_file.stride,
         )
     else:
-        image = Image.open(uploaded_image)
+        image = Image.open(image_file)
 
     return image.convert("RGB")
