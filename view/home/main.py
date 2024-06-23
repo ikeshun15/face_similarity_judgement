@@ -110,8 +110,8 @@ class HomeView:
         _, right = st.columns([3, 1])
         with right:
             st.button(
-                key="detect_faces1_skip",
-                label=texts.skip,
+                key="detect_faces1_next",
+                label=texts.next,
                 use_container_width=True,
                 disabled=False if is_detected_faces1_already else True,
                 on_click=lambda: StatesSState.set(state=States.SELECT_N_FACE1),
@@ -221,8 +221,8 @@ class HomeView:
             else:
                 disabled = True if detected_faces1.n_faces == 1 else False
             st.button(
-                key="detect_faces2_skip",
-                label=texts.skip,
+                key="detect_faces2_next",
+                label=texts.next,
                 use_container_width=True,
                 disabled=disabled,
                 on_click=_callback,

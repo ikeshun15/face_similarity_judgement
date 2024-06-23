@@ -73,17 +73,9 @@ class Texts:
     @property
     def next(self) -> str:
         if self.is_jp:
-            return "⏭️ 進む"
+            return "⏭️ 次へ"
         elif self.is_en:
             return "⏭️ Next"
-        raise Exception("lang at Texts should be 'ja' or 'en'!")
-
-    @property
-    def skip(self) -> str:
-        if self.is_jp:
-            return "⏭️ スキップ"
-        elif self.is_en:
-            return "⏭️ Skip"
         raise Exception("lang at Texts should be 'ja' or 'en'!")
 
     @property
