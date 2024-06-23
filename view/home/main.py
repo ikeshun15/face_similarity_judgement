@@ -109,16 +109,12 @@ class HomeView:
 
         _, right = st.columns([3, 1])
         with right:
-
-            def _callback():
-                StatesSState.set(state=States.SELECT_N_FACE2)
-
             st.button(
                 key="detect_faces1_skip",
                 label=texts.skip,
                 use_container_width=True,
                 disabled=False if is_detected_faces1_already else True,
-                on_click=_callback,
+                on_click=lambda: StatesSState.set(state=States.SELECT_N_FACE1),
             )
 
         if image_file is not None:
