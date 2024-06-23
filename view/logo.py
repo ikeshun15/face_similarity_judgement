@@ -1,4 +1,4 @@
-TITLE_ICON_SVG = """
+TITLE_LOGO_SVG = """
 <svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='40px' height='40px' viewBox='0 6 40 34' version='1.1'>
 <g id='surface1'>
 <path style=' stroke:none;fill-rule:evenodd;fill:none;fill-opacity:1;' d='M -0.03125 -0.03125 C 13.300781 -0.03125 26.636719 -0.03125 39.96875 -0.03125 C 39.96875 13.300781 39.96875 26.636719 39.96875 39.96875 C 26.636719 39.96875 13.300781 39.96875 -0.03125 39.96875 C -0.03125 26.636719 -0.03125 13.300781 -0.03125 -0.03125 Z M -0.03125 -0.03125 '/>
@@ -170,7 +170,7 @@ TITLE_ICON_SVG = """
 </svg>
 """
 
-NORMAL_ICON_SVG = """
+NORMAL_LOGO_SVG = """
 <svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='24px' height='24px' viewBox='0 0 24 24' version='1.1'>
 <g id='surface1'>
 <path style=' stroke:none;fill-rule:evenodd;fill:none;fill-opacity:1;' d='M -0.0195312 -0.0195312 C 7.980469 -0.0195312 15.980469 -0.0195312 23.980469 -0.0195312 C 23.980469 7.980469 23.980469 15.980469 23.980469 23.980469 C 15.980469 23.980469 7.980469 23.980469 -0.0195312 23.980469 C -0.0195312 15.980469 -0.0195312 7.980469 -0.0195312 -0.0195312 Z M -0.0195312 -0.0195312 '/>
