@@ -144,7 +144,7 @@ class HomeView:
         )
 
         taken_file2 = st.camera_input(
-            label=texts.photo_of_person1,
+            label=texts.photo_of_person2,
             label_visibility="collapsed",
         )
 
