@@ -1,6 +1,6 @@
 import streamlit as st
 
-from .logo import NORMAL_LOGO_SVG
+from model import LOGO_SVG
 
 
 class AppConfig:
@@ -8,6 +8,6 @@ class AppConfig:
     def set_app_config() -> None:
         st.set_page_config(
             page_title="Do We Look Alike?",
-            page_icon=NORMAL_LOGO_SVG,
+            page_icon=LOGO_SVG,
             layout="centered",
         )

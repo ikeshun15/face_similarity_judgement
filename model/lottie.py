@@ -1,12 +1,10 @@
 import json
 
 
-class JsonHandler:
-    @staticmethod
-    def load(filepath) -> str:
-        with open(filepath, "r") as f:
-            return json.load(f)
+def load_json(filepath: str) -> str:
+    with open(filepath, "r") as f:
+        return json.load(f)
 
 
 PROCESSING_LOTTIE_PATH = "./data/processing.json"
-PROCESSING_LOTTIE = JsonHandler.load(filepath=PROCESSING_LOTTIE_PATH)
+PROCESSING_LOTTIE = load_json(filepath=PROCESSING_LOTTIE_PATH)

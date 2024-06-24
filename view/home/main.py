@@ -3,11 +3,10 @@ import time
 import streamlit as st
 from streamlit_lottie import st_lottie_spinner
 
-from model import download_model_if_not_exists, PROCESSING_LOTTIE
+from model import download_model_if_not_exists, PROCESSING_LOTTIE, LOGO_LARGE_SVG
 from .sstate import StatesSState, DetectedFaces1SState, DetectedFaces2SState, NSelected1SState, NSelected2SState, TextsSState, ConbinedImageSState
 from .states import States
 from .recognizer import detect_faces, conbine_images_based_similarity
-from ..logo import TITLE_LOGO_SVG
 
 
 OK_IMAGE_EXTS = ["png", "jpg", "jpeg", "bmp", "webp", "heic"]
@@ -35,8 +34,10 @@ class HomeView:
     @classmethod
     def page_header_components(cls):
         texts = TextsSState.get()
-        style = "<style>h3 {text-align: center;}</style>" + f"<h3>{TITLE_LOGO_SVG} {texts.title}</h3>"
-        st.markdown(style, unsafe_allow_html=True)
+        st.markdown(
+            "<style>h3 {text-align: center;}</style>" + f"<h3>{LOGO_LARGE_SVG} {texts.title}</h3>",
+            unsafe_allow_html=True,
+        )
 
         _, right = st.columns([3, 1])
         with right:
